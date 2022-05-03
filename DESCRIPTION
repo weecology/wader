@@ -1,0 +1,33 @@
+Package: wader
+Title: A collection of functions to retrieve and summarize the EvergladesWadingBird Data
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = c("Glenda", "M."),
+             family = "Yenni",
+             role = c("aut", "cre"),
+             email = "glenda@weecology.org",
+             comment = c(ORCID = "0000-0001-6969-1848")))
+Description: Download and generate summaries for the count,
+    nesting, indicator, and weather data from the Wading Bird Project. 
+    The Wading Bird Project is a long-term (and ongoing) monitoring site 
+    in the Everglades water conservation areas. The raw data files can be found at
+    <https://github.com/weecology/evergladeswadingbird>.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Depends: 
+    R (>= 3.2.3)
+Imports:
+    clipr, 
+    clisymbols,
+    crayon,
+    dplyr,
+    httr,
+    lubridate,
+    magrittr,
+    rlang,
+    tidyr,
+    tidyselect (>= 1.0.0),
+    zoo
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
