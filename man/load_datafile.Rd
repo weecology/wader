@@ -13,7 +13,7 @@ load_datafile(
 )
 }
 \arguments{
-\item{datafile}{the path to the datafile within the folder for Portal data}
+\item{datafile}{the path to the datafile within the folder for EvergladesWadingBird data}
 
 \item{na.strings}{a character vector of strings which are to be
     interpreted as \code{\link{NA}} values.  Blank fields are also

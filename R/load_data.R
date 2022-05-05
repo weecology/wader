@@ -1,5 +1,5 @@
 #' @name load_indicator_data
-#' @aliases 
+#' @aliases
 #'
 #' @title Read in the Wading Bird data files
 #'
@@ -57,7 +57,7 @@ load_indicator_data <- function(path = get_default_data_path(),
 #'   reads it in, using na_strings to determine what gets converted to NA. It
 #'   can also download the dataset if it's missing locally.
 #'
-#' @param datafile the path to the datafile within the folder for Portal data
+#' @param datafile the path to the datafile within the folder for EvergladesWadingBird data
 #' @param quiet logical, whether to perform operations silently
 #' @inheritParams load_indicator_data
 #' @inheritParams utils::read.table
