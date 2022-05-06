@@ -36,7 +36,7 @@ max_count_indicator <- function(path = get_default_data_path(),
 
 }
 
-#' @name intiation_indicator
+#' @name initiation_indicator
 #'
 #' @title Generate summaries of wood stork nesting intiation indicator data
 #'
@@ -51,7 +51,7 @@ max_count_indicator <- function(path = get_default_data_path(),
 #'
 #' @export
 #'
-intiation_indicator <- function(path = get_default_data_path(),
+initiation_indicator <- function(path = get_default_data_path(),
                                 minyear = 1986, maxyear = 2021,
                                 window = 3,
                                 download_if_missing = TRUE)
@@ -252,7 +252,7 @@ plot_initiation <- function(path = get_default_data_path(),
                          window = 3,
                          download_if_missing = TRUE)
 {
-  intiation_indicator(path = path,
+  initiation_indicator(path = path,
                     minyear = minyear, maxyear = maxyear,
                     window = window,
                     download_if_missing = download_if_missing) %>%
