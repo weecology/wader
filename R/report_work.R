@@ -186,18 +186,15 @@ plot_foraging <- function(path = get_default_data_path(),
                      minyear = minyear, maxyear = maxyear,
                      window = window,
                      download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<1 ~ "red",
-                                           dplyr::between(.data$proportion_mean,1,32) ~ "yellow",
-                                           .data$proportion_mean>32 ~ "green")) %>%
+    dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<=32 ~ "black",
+                                           .data$proportion_mean>32 ~ "darkgrey")) %>%
 
   ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
                   ggplot2::geom_point(alpha=2, size=3) +
                   ggplot2::scale_colour_identity() +
                   ggplot2::theme_bw() +
                   ggplot2::ylab("tactile/visual") +
-                  ggplot2::geom_hline(yintercept=32, linetype=2, color="green", size=.5) +
-                  ggplot2::geom_hline(yintercept=2, linetype=2, color="yellow", size=.5) +
-                  ggplot2::geom_hline(yintercept=1, linetype=2, color="red", size=.5)
+                  ggplot2::geom_hline(yintercept=30, linetype=2, color="black", size=.5)
   }
 
 #' @name plot_coastal
@@ -224,18 +221,15 @@ plot_coastal <- function(path = get_default_data_path(),
                      minyear = minyear, maxyear = maxyear,
                      window = window,
                      download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<.1 ~ "red",
-                                           dplyr::between(.data$proportion_mean,.1,.5) ~ "yellow",
-                                           .data$proportion_mean>.5 ~ "green")) %>%
+    dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<=.5 ~ "black",
+                                           .data$proportion_mean>.5 ~ "darkgrey")) %>%
 
     ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
     ggplot2::theme_bw() +
     ggplot2::ylab("Average proportion nests in coastal colonies") +
-    ggplot2::geom_hline(yintercept=.5, linetype=2, color="green", size=.5) +
-    ggplot2::geom_hline(yintercept=.25, linetype=2, color="yellow", size=.5) +
-    ggplot2::geom_hline(yintercept=.1, linetype=2, color="red", size=.5)
+    ggplot2::geom_hline(yintercept=.5, linetype=2, color="black", size=.5)
 }
 
 #' @name plot_initiation
@@ -262,17 +256,15 @@ plot_initiation <- function(path = get_default_data_path(),
                     minyear = minyear, maxyear = maxyear,
                     window = window,
                     download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$date_score_mean<1.5 ~ "red",
-                                           dplyr::between(.data$date_score_mean,1.5,2.5) ~ "yellow",
-                                           .data$date_score_mean>2.5 ~ "green")) %>%
+    dplyr::mutate(color = dplyr::case_when(.data$date_score_mean<=4.5 ~ "black",
+                                           .data$date_score_mean>4.5 ~ "darkgrey")) %>%
 
     ggplot2::ggplot(ggplot2::aes(year, date_score_mean, color=color)) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
     ggplot2::theme_bw() +
     ggplot2::ylab("Wood stork nesting date score") +
-    ggplot2::geom_hline(yintercept=2.5, linetype=2, color="yellow", size=.5) +
-    ggplot2::geom_hline(yintercept=1.5, linetype=2, color="red", size=.5)
+    ggplot2::geom_hline(yintercept=4.5, linetype=2, color="black", size=.5)
 }
 
 #' @name plot_supercolony
@@ -299,17 +291,14 @@ plot_supercolony <- function(path = get_default_data_path(),
                       minyear = minyear, maxyear = maxyear,
                       window = window,
                       download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$interval_mean>5 ~ "red",
-                                           dplyr::between(.data$interval_mean,1.6,5) ~ "yellow",
-                                           .data$interval_mean<1.6 ~ "green")) %>%
+    dplyr::mutate(color = dplyr::case_when(.data$interval_mean>1.6 ~ "black",
+                                           .data$interval_mean<=1.6 ~ "darkgrey")) %>%
 
     ggplot2::ggplot(ggplot2::aes(year, interval_mean, color=color)) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
     ggplot2::theme_bw() +
     ggplot2::ylab("Ibis supercolony mean interval") +
-    ggplot2::geom_hline(yintercept=1.6, linetype=2, color="green", size=.5) +
-    ggplot2::geom_hline(yintercept=2.5, linetype=2, color="yellow", size=.5) +
-    ggplot2::geom_hline(yintercept=5, linetype=2, color="red", size=.5)
+    ggplot2::geom_hline(yintercept=1.6, linetype=2, color="black", size=.5)
 }
 
