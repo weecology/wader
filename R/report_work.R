@@ -132,6 +132,35 @@ foraging_indicator <- function(path = get_default_data_path(),
                                                    partial = TRUE))
 }
 
+#' @name supercolony_indicator
+#'
+#' @title Generate summaries of ibis supercolony indicator data
+#'
+#' @description Create a table of rolling averages for the interval between ibis supercolony
+#' events, by year
+#'
+#' @param minyear Earliest year to include
+#' @param maxyear Most recent year to include
+#' @param window number of years over which to create a rolling average
+#'
+#' @return a data.frame
+#'
+#' @export
+#'
+supercolony_indicator <- function(path = get_default_data_path(),
+                               minyear = 1931, maxyear = 2021,
+                               window = 3,
+                               download_if_missing = TRUE)
+{
+
+  load_datafile("Indicators/supercolony_interval.csv",
+                download_if_missing = download_if_missing) %>%
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
+    dplyr::mutate(interval_mean = zoo::rollapply(.data$ibis_interval, FUN="mean",
+                                                   width=window, align="right",
+                                                   partial = TRUE))
+}
+
 #' @name plot_foraging
 #'
 #' @title Plot tactile/visual foraging indicator data
@@ -244,5 +273,43 @@ plot_initiation <- function(path = get_default_data_path(),
     ggplot2::ylab("Wood stork nesting date score") +
     ggplot2::geom_hline(yintercept=2.5, linetype=2, color="yellow", size=.5) +
     ggplot2::geom_hline(yintercept=1.5, linetype=2, color="red", size=.5)
+}
+
+#' @name plot_supercolony
+#'
+#' @title Plot supercolony intervals
+#'
+#' @description Create a table of rolling averages for supercolony events,
+#' by year, and plot with thresholds
+#'
+#' @param minyear Earliest year to include
+#' @param maxyear Most recent year to include
+#' @param window number of years over which to create a rolling average
+#'
+#' @return a data.frame
+#'
+#' @export
+#'
+plot_supercolony <- function(path = get_default_data_path(),
+                            minyear = 1986, maxyear = 2021,
+                            window = 3,
+                            download_if_missing = TRUE)
+{
+  supercolony_indicator(path = path,
+                      minyear = minyear, maxyear = maxyear,
+                      window = window,
+                      download_if_missing = download_if_missing) %>%
+    dplyr::mutate(color = dplyr::case_when(.data$interval_mean>5 ~ "red",
+                                           dplyr::between(.data$interval_mean,1.6,5) ~ "yellow",
+                                           .data$interval_mean<1.6 ~ "green")) %>%
+
+    ggplot2::ggplot(ggplot2::aes(year, interval_mean, color=color)) +
+    ggplot2::geom_point(alpha=2, size=3) +
+    ggplot2::scale_colour_identity() +
+    ggplot2::theme_bw() +
+    ggplot2::ylab("Ibis supercolony mean interval") +
+    ggplot2::geom_hline(yintercept=1.6, linetype=2, color="green", size=.5) +
+    ggplot2::geom_hline(yintercept=2.5, linetype=2, color="yellow", size=.5) +
+    ggplot2::geom_hline(yintercept=5, linetype=2, color="red", size=.5)
 }
 
