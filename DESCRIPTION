@@ -17,8 +17,7 @@ Description: Download and generate summaries for the count,
     The Wading Bird Project is a long-term (and ongoing) monitoring site 
     in the Everglades water conservation areas. The raw data files can be found at
     <https://github.com/weecology/evergladeswadingbird>.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Depends: 
     R (>= 3.2.3)
 Imports:
