@@ -302,3 +302,46 @@ plot_supercolony <- function(path = get_default_data_path(),
     ggplot2::geom_hline(yintercept=1.6, linetype=2, color="black", size=.5)
 }
 
+#' @name max_counts
+#'
+#' @title Generate summaries of max count data for target species and plot
+#'
+#' @description Create a table of rolling averages for the max count indicator data,
+#' by year and region
+#'
+#' @param minyear Earliest year to include
+#' @param maxyear Most recent year to include
+#' @param window number of years over which to create a rolling average
+#'
+#' @return a data.frame
+#'
+#' @export
+#'
+max_counts <- function(path = get_default_data_path(),
+                                minyear = 1980, maxyear = 2021,
+                                window = 3,
+                                download_if_missing = TRUE)
+{
+
+  load_datafile("Indicators/max_count_all.csv",
+                download_if_missing = download_if_missing) %>%
+    dplyr::filter(.data$species %in% c("greg","sneg","whib","wost")) %>%
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
+    dplyr::select(-.data$region) %>%
+    dplyr::arrange(.data$species, .data$year) %>%
+    dplyr::group_by(.data$species) %>%
+    dplyr::mutate(                             # rolling average
+      count_mean = slider::slide_index_dbl(
+        .x = .data$count,
+        .i = .data$year,
+        .f = mean,
+        .before = window-1
+      )
+    ) %>%
+
+    ggplot2::ggplot(ggplot2::aes(x=year, y=count_mean, group=species, color=species)) +
+    ggplot2::geom_line(size=1.05) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.position="bottom") +
+    ggplot2::ylab("Number of nesting pairs (3-yr running ave)")
+}
