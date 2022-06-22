@@ -6,7 +6,7 @@ library(sf)
 library(stringr)
 library(units)
 
-load_boundaries <- function(path = file.path(wader::get_default_data_path(), "SiteandMethods/regions_layers/POLYGON.shp")) {
+load_boundaries <- function(path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/SiteandMethods/regions/regions.shp")) {
   boundaries <- st_read(path)
   return(boundaries)
 }
@@ -75,7 +75,7 @@ available_years <- function(eden_path) {
 #'
 get_eden_covariates <- function(eden_path,
                                 years = available_years(eden_path),
-                                boundaries_path = file.path(wader::get_default_data_path(), 'SiteandMethods/regions_layers/POLYGON.shp')) {
+                                boundaries_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/SiteandMethods/regions/regions.shp')) {
   eden_data_files <- list.files(file.path(eden_path), pattern = '_depth.nc')
   boundaries <- load_boundaries(boundaries_path)
   examp_eden_file <- read_stars(file.path(eden_path, eden_data_files[1]))

@@ -4,6 +4,13 @@ library(dplyr)
 library(ncdf4)
 library(raster)
 
+#' @name get_metadata
+#'
+#' @title Get EDEN metadata
+#'
+#' @export
+#'
+
 get_metadata <- function() {
   url <- "https://sflthredds.er.usgs.gov/thredds/catalog/eden/depths/catalog.html"
   metadata <- url %>%
@@ -16,12 +23,37 @@ get_metadata <- function() {
                              format = "%Y-%m-%dT%H:%M:%S"))
 }
 
+#' @name get_data_urls
+#'
+#' @title Get EDEN depths data URLs for download
+#'
+#' @param file_names file names to download from metadata
+#'
+#' @return list of file urls
+#'
+#' @export
+#'
+
 get_data_urls <- function(file_names) {
   base_url <- "https://sflthredds.er.usgs.gov/thredds/fileServer/eden/depths"
   urls <- file.path(base_url, file_names)
   return(list(file_names = file_names, urls = urls))
 }
 
+#' @name get_last_download
+#'
+#' @title Get list of EDEN depths data already downloaded
+#'
+#' @param eden_path path where the EDEN data should be stored
+#' @param metadata EDEN file metadata
+#' @param force_update if TRUE update all data files even if checks indicate
+#'   that remote files are unchanged since the current local copies were
+#'   created
+#'
+#' @return table of files already downloaded
+#'
+#' @export
+#'
 get_last_download <- function(eden_path, metadata, force_update = FALSE) {
   if ("last_download.csv" %in% list.files(eden_path) & !force_update) {
     last_download <- read.csv(file.path(eden_path, "last_download.csv"))
@@ -33,6 +65,18 @@ get_last_download <- function(eden_path, metadata, force_update = FALSE) {
   return(last_download)
 }
 
+#' @name get_files_to_update
+#'
+#' @title Determine list of new EDEN files to download
+#'
+#' @param eden_path path where the EDEN data should be stored
+#' @param metadata EDEN file metadata
+#' @param force_update if TRUE update all data files even if checks indicate
+#'   that remote files are unchanged since the current local copies were
+#'   created
+#'
+#' @export
+#'
 get_files_to_update <- function(eden_path, metadata, force_update = FALSE){
   last_download <- get_last_download(eden_path, metadata, force_update = force_update)
   to_update <- metadata %>%
@@ -40,6 +84,15 @@ get_files_to_update <- function(eden_path, metadata, force_update = FALSE){
     filter(last_modified.curr > last_modified.last | size.curr != size.last | is.na(last_modified.last))
 }
 
+#' @name update_last_download
+#'
+#' @title Write new metata file for files already downloaded
+#'
+#' @param eden_path path where the EDEN data should be stored
+#' @param metadata EDEN file metadata
+#'
+#' @export
+#'
 update_last_download <- function(eden_path, metadata){
   current_files <- list.files(eden_path, pattern = "*_depth.nc")
   if (identical(sort(current_files), sort(metadata$dataset))) {
@@ -97,13 +150,13 @@ download_eden_depths <- function(eden_path, force_update = FALSE) {
 combine_eden_depths <- function(eden_path) {
   file.remove(file.path(eden_path, "1991_q1_depth_out.nc"))
   system(paste("ncks", "--mk_rec_dmn", "time",
-    file.path(eden_path, "1991_q1_depth.nc"),
-    file.path(eden_path, "1991_q1_depth_out.nc")))
+                file.path(eden_path, "1991_q1_depth.nc"),
+                file.path(eden_path, "1991_q1_depth_out.nc")))
   file.remove(file.path(eden_path, "1991_q1_depth.nc"))
   file.rename(file.path(eden_path, "1991_q1_depth_out.nc"),
               file.path(eden_path, "1991_q1_depth.nc"))
   file.remove(file.path(eden_path, "eden_depth_combined.nc"))
   system(paste("ncrcat", file.path(eden_path, "*_depth.nc"),
-    file.path(eden_path, "eden_depth_combined.nc")))
+                file.path(eden_path, "eden_depth_combined.nc")))
   return(file.path(eden_path, "eden_depth_combined.nc"))
 }
