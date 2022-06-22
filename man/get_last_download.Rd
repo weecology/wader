@@ -4,7 +4,11 @@
 \alias{get_last_download}
 \title{Get list of EDEN depths data already downloaded}
 \usage{
-get_last_download(eden_path, metadata, force_update = FALSE)
+get_last_download(
+  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  metadata,
+  force_update = FALSE
+)
 }
 \arguments{
 \item{eden_path}{path where the EDEN data should be stored}

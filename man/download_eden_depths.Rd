@@ -4,7 +4,10 @@
 \alias{download_eden_depths}
 \title{Download the EDEN depths data}
 \usage{
-download_eden_depths(eden_path, force_update = FALSE)
+download_eden_depths(
+  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  force_update = FALSE
+)
 }
 \arguments{
 \item{eden_path}{path where the EDEN data should be stored}

@@ -4,7 +4,9 @@
 \alias{combine_eden_depths}
 \title{Combine the quarterly EDEN depths .nc files into a single .nc file}
 \usage{
-combine_eden_depths(eden_path)
+combine_eden_depths(
+  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water")
+)
 }
 \arguments{
 \item{eden_path}{path where the EDEN data should be stored}

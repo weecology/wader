@@ -4,7 +4,11 @@
 \alias{get_files_to_update}
 \title{Determine list of new EDEN files to download}
 \usage{
-get_files_to_update(eden_path, metadata, force_update = FALSE)
+get_files_to_update(
+  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  metadata,
+  force_update = FALSE
+)
 }
 \arguments{
 \item{eden_path}{path where the EDEN data should be stored}

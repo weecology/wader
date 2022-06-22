@@ -5,7 +5,7 @@
 \title{Generate annual scale water covariates using EDEN data}
 \usage{
 get_eden_covariates(
-  eden_path,
+  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
   years = available_years(eden_path),
   boundaries_path = file.path(wader::get_default_data_path(),
     "EvergladesWadingBird/SiteandMethods/regions/regions.shp")

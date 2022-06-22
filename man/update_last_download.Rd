@@ -4,7 +4,10 @@
 \alias{update_last_download}
 \title{Write new metata file for files already downloaded}
 \usage{
-update_last_download(eden_path, metadata)
+update_last_download(
+  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  metadata
+)
 }
 \arguments{
 \item{eden_path}{path where the EDEN data should be stored}

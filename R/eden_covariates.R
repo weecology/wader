@@ -52,7 +52,7 @@ extract_region_means <- function(raster, regions) {
   return(region_means_spdf)
 }
 
-available_years <- function(eden_path) {
+available_years <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water')) {
   eden_data_files <- list.files(file.path(eden_path), pattern = '_depth.nc')
   years <- eden_data_files %>%
     str_split('_', simplify = TRUE) %>%
@@ -73,7 +73,7 @@ available_years <- function(eden_path) {
 #'
 #' @export
 #'
-get_eden_covariates <- function(eden_path,
+get_eden_covariates <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'),
                                 years = available_years(eden_path),
                                 boundaries_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/SiteandMethods/regions/regions.shp')) {
   eden_data_files <- list.files(file.path(eden_path), pattern = '_depth.nc')

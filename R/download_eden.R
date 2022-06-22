@@ -54,7 +54,7 @@ get_data_urls <- function(file_names) {
 #'
 #' @export
 #'
-get_last_download <- function(eden_path, metadata, force_update = FALSE) {
+get_last_download <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), metadata, force_update = FALSE) {
   if ("last_download.csv" %in% list.files(eden_path) & !force_update) {
     last_download <- read.csv(file.path(eden_path, "last_download.csv"))
   } else {
@@ -77,7 +77,7 @@ get_last_download <- function(eden_path, metadata, force_update = FALSE) {
 #'
 #' @export
 #'
-get_files_to_update <- function(eden_path, metadata, force_update = FALSE){
+get_files_to_update <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), metadata, force_update = FALSE){
   last_download <- get_last_download(eden_path, metadata, force_update = force_update)
   to_update <- metadata %>%
     left_join(last_download, by = "dataset", suffix = c(".curr", ".last")) %>%
@@ -93,7 +93,7 @@ get_files_to_update <- function(eden_path, metadata, force_update = FALSE){
 #'
 #' @export
 #'
-update_last_download <- function(eden_path, metadata){
+update_last_download <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), metadata){
   current_files <- list.files(eden_path, pattern = "*_depth.nc")
   if (identical(sort(current_files), sort(metadata$dataset))) {
     write.csv(metadata, file.path(eden_path, 'last_download.csv'))
@@ -116,7 +116,7 @@ update_last_download <- function(eden_path, metadata){
 #'
 #' @export
 #'
-download_eden_depths <- function(eden_path, force_update = FALSE) {
+download_eden_depths <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), force_update = FALSE) {
 
   if (!dir.exists(eden_path)) {
     dir.create(eden_path, recursive = TRUE)
@@ -124,7 +124,7 @@ download_eden_depths <- function(eden_path, force_update = FALSE) {
 
   metadata <- get_metadata()
   to_update <- get_files_to_update(eden_path, metadata,
-                 force_update = force_update)
+                                   force_update = force_update)
   data_urls <- get_data_urls(to_update$dataset)
   options(timeout = 226)
 
@@ -147,7 +147,7 @@ download_eden_depths <- function(eden_path, force_update = FALSE) {
 #'
 #' @export
 #'
-combine_eden_depths <- function(eden_path) {
+combine_eden_depths <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water')) {
   file.remove(file.path(eden_path, "1991_q1_depth_out.nc"))
   system(paste("ncks", "--mk_rec_dmn", "time",
                 file.path(eden_path, "1991_q1_depth.nc"),
