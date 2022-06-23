@@ -5,7 +5,7 @@
 \title{Write new metata file for files already downloaded}
 \usage{
 update_last_download(
-  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  eden_path = file.path(get_default_data_path(), "EvergladesWadingBird/Water"),
   metadata
 )
 }

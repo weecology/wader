@@ -302,7 +302,7 @@ plot_supercolony <- function(path = get_default_data_path(),
     ggplot2::geom_hline(yintercept=1.6, linetype=2, color="black", size=.5)
 }
 
-#' @name max_counts
+#' @name max_count_plot
 #'
 #' @title Generate summaries of max count data for target species and plot
 #'
@@ -317,7 +317,7 @@ plot_supercolony <- function(path = get_default_data_path(),
 #'
 #' @export
 #'
-max_counts <- function(path = get_default_data_path(),
+max_count_plot <- function(path = get_default_data_path(),
                                 minyear = 1980, maxyear = 2021,
                                 window = 3,
                                 download_if_missing = TRUE)

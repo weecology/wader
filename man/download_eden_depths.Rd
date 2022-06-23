@@ -5,7 +5,7 @@
 \title{Download the EDEN depths data}
 \usage{
 download_eden_depths(
-  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  eden_path = file.path(get_default_data_path(), "EvergladesWadingBird/Water"),
   force_update = FALSE
 )
 }

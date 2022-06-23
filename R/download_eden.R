@@ -1,9 +1,4 @@
-library(rvest)
-library(lubridate)
-library(dplyr)
-library(ncdf4)
-library(raster)
-
+# Functions to find and download EDEN water depth data
 #' @name get_metadata
 #'
 #' @title Get EDEN metadata
@@ -14,12 +9,12 @@ library(raster)
 get_metadata <- function() {
   url <- "https://sflthredds.er.usgs.gov/thredds/catalog/eden/depths/catalog.html"
   metadata <- url %>%
-    read_html() %>%
-    html_table()
+    rvest::read_html() %>%
+    rvest::html_table()
   metadata <- metadata[[1]] %>%
-    filter(Dataset != "depths") %>% #Drop directory name from first row
-    rename(dataset = Dataset, size = Size, last_modified = `Last Modified`) %>%
-    mutate(last_modified = as.POSIXct(last_modified,
+    dplyr::filter(Dataset != "depths") %>% #Drop directory name from first row
+    dplyr::rename(dataset = Dataset, size = Size, last_modified = `Last Modified`) %>%
+    dplyr::mutate(last_modified = as.POSIXct(last_modified,
                              format = "%Y-%m-%dT%H:%M:%S"))
 }
 
@@ -54,7 +49,9 @@ get_data_urls <- function(file_names) {
 #'
 #' @export
 #'
-get_last_download <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), metadata, force_update = FALSE) {
+get_last_download <- function(eden_path =
+                              file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
+                              metadata, force_update = FALSE) {
   if ("last_download.csv" %in% list.files(eden_path) & !force_update) {
     last_download <- read.csv(file.path(eden_path, "last_download.csv"))
   } else {
@@ -77,11 +74,13 @@ get_last_download <- function(eden_path = file.path(wader::get_default_data_path
 #'
 #' @export
 #'
-get_files_to_update <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), metadata, force_update = FALSE){
+get_files_to_update <- function(eden_path =
+                                file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
+                                metadata, force_update = FALSE){
   last_download <- get_last_download(eden_path, metadata, force_update = force_update)
   to_update <- metadata %>%
-    left_join(last_download, by = "dataset", suffix = c(".curr", ".last")) %>%
-    filter(last_modified.curr > last_modified.last | size.curr != size.last | is.na(last_modified.last))
+    dplyr::left_join(last_download, by = "dataset", suffix = c(".curr", ".last")) %>%
+    dplyr::filter(last_modified.curr > last_modified.last | size.curr != size.last | is.na(last_modified.last))
 }
 
 #' @name update_last_download
@@ -93,7 +92,9 @@ get_files_to_update <- function(eden_path = file.path(wader::get_default_data_pa
 #'
 #' @export
 #'
-update_last_download <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), metadata){
+update_last_download <- function(eden_path =
+                                file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
+                                 metadata){
   current_files <- list.files(eden_path, pattern = "*_depth.nc")
   if (identical(sort(current_files), sort(metadata$dataset))) {
     write.csv(metadata, file.path(eden_path, 'last_download.csv'))
@@ -116,7 +117,9 @@ update_last_download <- function(eden_path = file.path(wader::get_default_data_p
 #'
 #' @export
 #'
-download_eden_depths <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water'), force_update = FALSE) {
+download_eden_depths <- function(eden_path =
+                                 file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
+                                 force_update = FALSE) {
 
   if (!dir.exists(eden_path)) {
     dir.create(eden_path, recursive = TRUE)
@@ -135,28 +138,4 @@ download_eden_depths <- function(eden_path = file.path(wader::get_default_data_p
   update_last_download(eden_path, metadata)
 
   return(file.path(eden_path, data_urls$file_names))
-}
-
-#' @name combine_eden_depths
-#'
-#' @title Combine the quarterly EDEN depths .nc files into a single .nc file
-#'
-#' @param eden_path path where the EDEN data should be stored
-#'
-#' @return char path of combined file
-#'
-#' @export
-#'
-combine_eden_depths <- function(eden_path = file.path(wader::get_default_data_path(), 'EvergladesWadingBird/Water')) {
-  file.remove(file.path(eden_path, "1991_q1_depth_out.nc"))
-  system(paste("ncks", "--mk_rec_dmn", "time",
-                file.path(eden_path, "1991_q1_depth.nc"),
-                file.path(eden_path, "1991_q1_depth_out.nc")))
-  file.remove(file.path(eden_path, "1991_q1_depth.nc"))
-  file.rename(file.path(eden_path, "1991_q1_depth_out.nc"),
-              file.path(eden_path, "1991_q1_depth.nc"))
-  file.remove(file.path(eden_path, "eden_depth_combined.nc"))
-  system(paste("ncrcat", file.path(eden_path, "*_depth.nc"),
-                file.path(eden_path, "eden_depth_combined.nc")))
-  return(file.path(eden_path, "eden_depth_combined.nc"))
 }

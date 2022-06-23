@@ -5,21 +5,27 @@
 \title{Generate annual scale water covariates using EDEN data}
 \usage{
 get_eden_covariates(
-  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  eden_path = file.path(get_default_data_path(), "EvergladesWadingBird/Water"),
   years = available_years(eden_path),
   boundaries_path = file.path(wader::get_default_data_path(),
-    "EvergladesWadingBird/SiteandMethods/regions/regions.shp")
+    "EvergladesWadingBird/SiteandMethods/regions"),
+  level = "subregions"
 )
 }
 \arguments{
 \item{eden_path}{path where the EDEN data should be stored}
 
-\item{year}{numeric vector of years to generate covariates for, defaults to all available years}
+\item{level}{region level to load (all, wcas, or subregions)}
 
-\item{boundaries_file}{name of a shape file holding the boundaries within which to calculate covariates}
+\item{year}{numeric vector of years to generate covariates for,
+defaults to all available years}
+
+\item{boundaries_file}{name of a shape file holding the boundaries
+within which to calculate covariates}
 }
 \value{
-data.frame covariate data including columns for region, year, covariate, value, and the geometry of the region
+data.frame covariate data including columns for region, year,
+covariate, value, and the geometry of the region
 }
 \description{
 Generate annual scale water covariates using EDEN data

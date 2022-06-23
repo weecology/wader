@@ -5,7 +5,7 @@
 \title{Determine list of new EDEN files to download}
 \usage{
 get_files_to_update(
-  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  eden_path = file.path(get_default_data_path(), "EvergladesWadingBird/Water"),
   metadata,
   force_update = FALSE
 )

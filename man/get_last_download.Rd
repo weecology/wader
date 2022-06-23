@@ -5,7 +5,7 @@
 \title{Get list of EDEN depths data already downloaded}
 \usage{
 get_last_download(
-  eden_path = file.path(wader::get_default_data_path(), "EvergladesWadingBird/Water"),
+  eden_path = file.path(get_default_data_path(), "EvergladesWadingBird/Water"),
   metadata,
   force_update = FALSE
 )
