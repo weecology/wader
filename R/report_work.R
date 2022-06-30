@@ -344,4 +344,9 @@ max_count_plot <- function(path = get_default_data_path(),
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position="bottom") +
     ggplot2::ylab("Number of nesting pairs (3-yr running ave)")
+
+    # for report table
+    # dplyr::select(-count) %>%
+    # tidyr::pivot_wider(names_from = species, values_from = count_mean) %>%
+    # dplyr::mutate(dplyr::across(2:5, round, 0))
 }

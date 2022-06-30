@@ -2,7 +2,6 @@
 % Please edit documentation in R/load_data.R
 \name{load_indicator_data}
 \alias{load_indicator_data}
-\alias{}
 \title{Read in the Wading Bird data files}
 \usage{
 load_indicator_data(

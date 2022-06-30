@@ -1,5 +1,4 @@
 #' @name load_indicator_data
-#' @aliases
 #'
 #' @title Read in the Wading Bird data files
 #'
