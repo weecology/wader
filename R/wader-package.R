@@ -10,9 +10,10 @@
 #'
 #' @importFrom lubridate "%m+%"
 #' @importFrom rlang "!!" "!!!" ":=" .data
-#' @importFrom utils head download.file read.csv unzip read.table tail
-#' @importFrom stats median na.omit
+#' @importFrom utils head download.file read.csv unzip read.table tail write.csv
+#' @importFrom stats median na.omit sd setNames time
 #' @importFrom httr content GET stop_for_status
+#'
 
 NULL
 

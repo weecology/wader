@@ -8,6 +8,8 @@
 #' @param temperature_limit Temperature limit (in C) to use when calculating cumulative values
 #' (eg warm weather precip)
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @export
 #'
 weather <- function(level = "daily", horizon = 365, temperature_limit = 10,
@@ -25,7 +27,8 @@ weather <- function(level = "daily", horizon = 365, temperature_limit = 10,
     dplyr::group_by(.data$year, .data$month, .data$day, .data$date) %>%
     dplyr::summarize(mintemp = suppressWarnings(min(c(.data$tmin,.data$tmax,.data$tobs,.data$tavg), na.rm = TRUE)),
                      maxtemp = suppressWarnings(max(c(.data$tmin,.data$tmax,.data$tobs,.data$tavg), na.rm = TRUE)),
-                     meantemp = suppressWarnings(mean(c(.data$tobs,.data$tavg), na.rm = TRUE)),
+                     # meantemp = suppressWarnings(mean(c(.data$tobs,.data$tavg), na.rm = TRUE)),
+                     meantemp = suppressWarnings(mean(c(.data$tmin,.data$tmax), na.rm = TRUE)),
                      precipitation = suppressWarnings(mean(.data$prcp, na.rm = TRUE))) %>%
     dplyr::mutate(across(where(is.numeric), ~dplyr::na_if(., Inf)),
                   across(where(is.numeric), ~dplyr::na_if(., -Inf)),
@@ -63,7 +66,7 @@ weather <- function(level = "daily", horizon = 365, temperature_limit = 10,
                     meantemp = ifelse(is.finite(.data$meantemp), .data$meantemp, NA)) %>%
       dplyr::full_join(normals, by="month") %>%
       dplyr::rowwise() %>%
-      dplyr::mutate(anomaly_ppt = .data$precipitation/.data$ppt,
+      dplyr::mutate(anomaly_ppt = .data$precipitation - .data$ppt,
                     anomaly_mint = .data$mintemp - .data$tmin,
                     anomaly_maxt = .data$maxtemp - .data$tmax,
                     anomaly_meant = .data$meantemp - .data$tmean) %>%
@@ -71,4 +74,66 @@ weather <- function(level = "daily", horizon = 365, temperature_limit = 10,
       dplyr::arrange(.data$year, .data$month)
   }
   return(as.data.frame(weather))
+}
+
+#' @title Weather figures for reporting
+#'
+#' @description Plot monthly deviations from mean
+#'
+#' @param data specify 'temperature', 'precipitation'
+#' @param plot_year year to plot
+#'
+#' @inheritParams load_indicator_data
+#'
+#' @export
+#'
+weather_report <- function(data = "temperature", plot_year = as.numeric(format(Sys.Date(), "%Y")),
+                    path = get_default_data_path())
+{
+data = tolower(data)
+
+  weather <- weather(level = "monthly")
+
+  sds <- weather %>%
+    dplyr::group_by(.data$month) %>%
+    dplyr::summarise(temperature = sd(.data$anomaly_meant, na.rm =TRUE),
+                     precipitation = sd(.data$anomaly_ppt, na.rm =TRUE)) %>%
+    dplyr::filter(.data$month %in% c(12,1:6)) %>%
+    dplyr::select("month", "temperature", "precipitation")
+
+  current <- weather %>%
+    dplyr::mutate(year = ifelse(.data$month == 12, .data$year+1, .data$year)) %>%
+    dplyr::filter(year == plot_year, .data$month %in% c(12,1:6)) %>%
+    dplyr::select("month","anomaly_meant","anomaly_ppt") %>%
+    dplyr::full_join(sds) %>%
+    dplyr::arrange(.data$month) %>%
+    dplyr::mutate(names=month.abb[.data$month]) %>%
+    dplyr::mutate(names = factor(.data$names, levels=c("Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun")))
+
+  if(data=="temperature") {
+    x <- ggplot2::ggplot(current)  +
+         ggplot2::geom_bar(ggplot2::aes(x=names, y=anomaly_meant),
+                           stat="identity",fill="red",color="red",width = 0.75) +
+         ggplot2::geom_line(ggplot2::aes(x=names, y=temperature,group = 1),
+                            stat="identity",linetype=2,linewidth=1.4) +
+         ggplot2::geom_line(ggplot2::aes(x=names, y=-temperature,group = 1),
+                            stat="identity",linetype=2,linewidth=1.4) +
+         ggplot2::labs(y="Temperature deviation (C)") +
+         ggplot2::theme_bw() +
+         ggplot2::xlab(plot_year)
+  }
+
+  if(data=="precipitation") {
+    x <- ggplot2::ggplot(current)  +
+         ggplot2::geom_bar(ggplot2::aes(x=names, y=anomaly_ppt),
+                           stat="identity",fill="red",color="red",width = 0.75) +
+         ggplot2::geom_line(ggplot2::aes(x=names, y=precipitation,group = 1),
+                            stat="identity",linetype=2,linewidth=1.4) +
+         ggplot2::geom_line(ggplot2::aes(x=names, y=-precipitation,group = 1),
+                            stat="identity",linetype=2,linewidth=1.4) +
+         ggplot2::labs(y="Precipitation deviation (mm)") +
+         ggplot2::theme_bw() +
+         ggplot2::xlab(plot_year)
+  }
+  print(x)
 }

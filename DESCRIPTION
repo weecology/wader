@@ -1,6 +1,6 @@
 Package: wader
 Title: A Collection of Functions to Retrieve and Summarize the EvergladesWadingBird Data
-Version: 0.0.0.1
+Version: 0.0.1
 Authors@R: 
     c(person(given = c("Glenda", "M."),
              family = "Yenni",
@@ -21,13 +21,12 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 3.2.3)
 Imports:
-    clipr, 
+    clipr,
     clisymbols,
     crayon,
     cubelyr,
     dplyr,
     httr,
-    httptest,
     lubridate,
     magrittr,
     ncdf4,
@@ -37,11 +36,18 @@ Imports:
     sf,
     stars,
     stringr,
-    testthat,
     tidyr,
     tidyselect (>= 1.0.0),
     units,
     zoo
+Suggests:
+    ggplot2,
+    httptest,
+    knitr,
+    pkgdown,
+    rmarkdown,
+    slider,
+    testthat
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
