@@ -1,4 +1,5 @@
 # wader
+[![R-CMD-check](https://github.com/weecology/wader/workflows/R-CMD-check/badge.svg)](https://github.com/weecology/wader/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/wader/main/LICENSE)
 ## Overview
 
