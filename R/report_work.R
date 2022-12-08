@@ -9,6 +9,8 @@
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @return a data.frame
 #'
 #' @export
@@ -22,7 +24,7 @@ max_count_indicator <- function(path = get_default_data_path(),
   load_datafile("Indicators/max_count_all.csv",
                              download_if_missing = download_if_missing) %>%
                dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
-               dplyr::select(-.data$region) %>%
+               dplyr::select(-"region") %>%
                dplyr::arrange(.data$species, .data$year) %>%
                dplyr::group_by(.data$species) %>%
     dplyr::mutate(                             # rolling average
@@ -46,6 +48,8 @@ max_count_indicator <- function(path = get_default_data_path(),
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
+#'
+#' @inheritParams load_indicator_data
 #'
 #' @return a data.frame
 #'
@@ -77,6 +81,8 @@ initiation_indicator <- function(path = get_default_data_path(),
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @return a data.frame
 #'
 #' @export
@@ -107,6 +113,8 @@ coastal_indicator <- function(path = get_default_data_path(),
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @return a data.frame
 #'
 #' @export
@@ -121,7 +129,7 @@ foraging_indicator <- function(path = get_default_data_path(),
                 download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear),
                   .data$species %in% c("wost","whib","greg")) %>%
-    dplyr::select(-.data$region) %>%
+    dplyr::select(-"region") %>%
     dplyr::group_by(.data$year) %>%
     dplyr::summarise(proportion =
                     (.data$count[.data$species=="wost"]+.data$count[.data$species=="whib"])/.data$count[.data$species=="greg"]) %>%
@@ -142,6 +150,8 @@ foraging_indicator <- function(path = get_default_data_path(),
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
+#'
+#' @inheritParams load_indicator_data
 #'
 #' @return a data.frame
 #'
@@ -171,6 +181,8 @@ supercolony_indicator <- function(path = get_default_data_path(),
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
+#'
+#' @inheritParams load_indicator_data
 #'
 #' @return a data.frame
 #'
@@ -208,6 +220,8 @@ plot_foraging <- function(path = get_default_data_path(),
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @return a data.frame
 #'
 #' @export
@@ -242,6 +256,8 @@ plot_coastal <- function(path = get_default_data_path(),
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
+#'
+#' @inheritParams load_indicator_data
 #'
 #' @return a data.frame
 #'
@@ -278,6 +294,8 @@ plot_initiation <- function(path = get_default_data_path(),
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @return a data.frame
 #'
 #' @export
@@ -313,6 +331,8 @@ plot_supercolony <- function(path = get_default_data_path(),
 #' @param maxyear Most recent year to include
 #' @param window number of years over which to create a rolling average
 #'
+#' @inheritParams load_indicator_data
+#'
 #' @return a data.frame
 #'
 #' @export
@@ -327,7 +347,7 @@ max_count_plot <- function(path = get_default_data_path(),
                 download_if_missing = download_if_missing) %>%
     dplyr::filter(.data$species %in% c("greg","sneg","whib","wost")) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
-    dplyr::select(-.data$region) %>%
+    dplyr::select("region") %>%
     dplyr::arrange(.data$species, .data$year) %>%
     dplyr::group_by(.data$species) %>%
     dplyr::mutate(                             # rolling average

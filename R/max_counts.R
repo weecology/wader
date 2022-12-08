@@ -24,7 +24,7 @@ max_counts <- function(path = get_default_data_path(),
      dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
      dplyr::group_by(.data$year, .data$colony, .data$region, .data$species) %>%
      dplyr::summarise(count = max(.data$count)) %>%
-     dplyr::select(.data$year, .data$region, .data$colony, .data$species, .data$count) %>%
+     dplyr::select("year", "region", "colony", "species", "count") %>%
      dplyr::arrange(.data$colony, .data$species, .data$year)
 
    regions <- load_datafile("Indicators/max_count.csv") %>%
@@ -41,7 +41,7 @@ max_counts <- function(path = get_default_data_path(),
       dplyr::filter(region %in% c("2a","2b", "3an", "3as", "3ase", "3b")) %>%
       dplyr::bind_rows(regions) %>%
       dplyr::filter(region %in% c("wca1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
-      dplyr::select(.data$year, .data$region, .data$species, .data$count) %>%
+      dplyr::select("year", "region", "species", "count") %>%
       dplyr::arrange(.data$region, .data$species, .data$year)
   }
 
@@ -54,7 +54,7 @@ max_counts <- function(path = get_default_data_path(),
   if(level == "all") {
     out <- load_datafile("Indicators/max_count_all.csv") %>%
       dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
-      dplyr::select(-.data$region) %>%
+      dplyr::select(-"region") %>%
       dplyr::arrange(.data$species, .data$year)
   }
 

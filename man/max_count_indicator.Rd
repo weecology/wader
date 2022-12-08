@@ -13,11 +13,17 @@ max_count_indicator(
 )
 }
 \arguments{
+\item{path}{either the file path that contains the Wading Bird folder or
+"repo", which then pulls data from the EvergladesWadingBird GitHub repository}
+
 \item{minyear}{Earliest year to include}
 
 \item{maxyear}{Most recent year to include}
 
 \item{window}{number of years over which to create a rolling average}
+
+\item{download_if_missing}{if the specified file path doesn't have the
+EvergladesWadingBird folder, then download it}
 }
 \value{
 a data.frame
