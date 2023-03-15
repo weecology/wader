@@ -19,6 +19,7 @@ max_counts <- function(path = get_default_data_path(),
 {
  level <- tolower(level)
  options(dplyr.summarise.inform = FALSE)
+ minyear <- as.integer(minyear); maxyear <- as.integer(maxyear)
 
    colonies <- load_datafile("Counts/maxcounts.csv") %>%
      dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
