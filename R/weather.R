@@ -137,3 +137,28 @@ data = tolower(data)
   }
   print(x)
 }
+
+#' @name water_report
+#'
+#' @title Plot water gauge data
+#'
+#' @description Create a plot of water gauge data
+#'
+#' @param minyear Earliest year to include
+#' @param maxyear Most recent year to include
+#' @param wca wca to plot
+#'
+#'
+#' @return a data.frame
+#'
+#' @export
+#'
+water_report <- function(path = get_default_data_path(),
+                       minyear = 1991, maxyear = 2022,
+                       wca = 1,
+                       download_if_missing = TRUE)
+{
+
+  load_datafile("Water/eden_covariates.csv",
+                download_if_missing = download_if_missing)
+}
