@@ -77,10 +77,18 @@ get_last_download <- function(eden_path =
 get_files_to_update <- function(eden_path =
                                 file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
                                 metadata, force_update = FALSE){
+  # Find files that have been updated since last download
   last_download <- get_last_download(eden_path, metadata, force_update = force_update)
-  to_update <- metadata %>%
+  outdated <- metadata %>%
     dplyr::left_join(last_download, by = "dataset", suffix = c(".curr", ".last")) %>%
     dplyr::filter(last_modified.curr > last_modified.last | size.curr != size.last | is.na(last_modified.last))
+  
+  # Find files that are available, but missing
+  current_files <- list.files(eden_path, pattern = "*_depth.nc")
+  missing <- metadata |>
+    dplyr::filter(!(dataset %in% current_files))
+
+  dplyr::full_join(outdated, missing, by = "dataset")
 }
 
 #' @name update_last_download
