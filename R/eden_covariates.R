@@ -46,8 +46,13 @@ calc_dry_days <- function(depth_data) {
 #'
 calc_recession <- function(depth_data) {
   times <- stars::st_get_dimension_values(depth_data, 'time')
-  recession <- dplyr::filter(depth_data, time == min(times)) -
-               dplyr::filter(depth_data, time == max(times))
+  start_depth <- depth_data |>
+    dplyr::filter(time == min(times)) |>
+    stars::st_set_dimensions("time", values = NULL)
+  end_depth <- depth_data |>
+    dplyr::filter(time == max(times)) |>
+    stars::st_set_dimensions("time", values = NULL)
+  recession <- start_depth - end_depth
   days <- as.integer(max(times) - min(times))
   recession_rate <- recession / days
   return(recession_rate)
@@ -63,8 +68,11 @@ calc_recession <- function(depth_data) {
 #'
 calc_reversals <- function(depth_data) {
   end_date_position <- stars::st_dimensions(depth_data)$time$to
-  depth_deltas <- depth_data[,,,2:end_date_position] -
-                    depth_data[,,,1:(end_date_position - 1)]
+  depth_t <- depth_data[,,,2:end_date_position] |>
+    stars::st_set_dimensions("time", values = seq(1, end_date_position - 1))
+  depth_t_minus_1 <- depth_data[,,,1:(end_date_position - 1)] |>
+      stars::st_set_dimensions("time", values = seq(1, end_date_position - 1))
+  depth_deltas <- depth_t - depth_t_minus_1
   reversals <- depth_deltas %>%
     dplyr::mutate(reversal = dplyr::case_when(depth > units::set_units(0, cm) ~
                                                 units::set_units(1, d),
