@@ -19,6 +19,9 @@ weather(
 
 \item{temperature_limit}{Temperature limit (in C) to use when calculating cumulative values
 (eg warm weather precip)}
+
+\item{path}{either the file path that contains the Wading Bird folder or
+"repo", which then pulls data from the EvergladesWadingBird GitHub repository}
 }
 \description{
 Summarize hourly weather data to either daily or monthly

@@ -11,7 +11,7 @@
 #'
 load_boundaries <- function(path = file.path(wader::get_default_data_path(),
                                              "EvergladesWadingBird/SiteandMethods/regions"),
-                                                                        level="subregions") {
+                            level="subregions") {
   level <- tolower(level)
   boundaries <- sf::st_read(file.path(path,paste(level,".shp",sep = "")))
   return(boundaries)
@@ -26,13 +26,13 @@ load_boundaries <- function(path = file.path(wader::get_default_data_path(),
 #' @export
 #'
 calc_dry_days <- function(depth_data) {
-   dry_days <- depth_data %>%
-      dplyr::mutate(dry_days = dplyr::case_when(depth <= units::set_units(0, cm) ~
-                                                  units::set_units(1, d),
-                          depth > units::set_units(0, cm) ~ units::set_units(0, d),
-                          is.na(depth) ~ units::set_units(NA, d)),
-        .keep = "none") %>%
-      stars::st_apply(c(1, 2), sum)
+  dry_days <- depth_data %>%
+    dplyr::mutate(dry_days = dplyr::case_when(depth <= units::set_units(0, cm) ~
+                                                units::set_units(1, d),
+                                              depth > units::set_units(0, cm) ~ units::set_units(0, d),
+                                              is.na(depth) ~ units::set_units(NA, d)),
+                  .keep = "none") %>%
+    stars::st_apply(c(1, 2), sum)
   return(dry_days)
 }
 
@@ -71,14 +71,14 @@ calc_reversals <- function(depth_data) {
   depth_t <- depth_data[,,,2:end_date_position] |>
     stars::st_set_dimensions("time", values = seq(1, end_date_position - 1))
   depth_t_minus_1 <- depth_data[,,,1:(end_date_position - 1)] |>
-      stars::st_set_dimensions("time", values = seq(1, end_date_position - 1))
+    stars::st_set_dimensions("time", values = seq(1, end_date_position - 1))
   depth_deltas <- depth_t - depth_t_minus_1
   reversals <- depth_deltas %>%
     dplyr::mutate(reversal = dplyr::case_when(depth > units::set_units(0, cm) ~
                                                 units::set_units(1, d),
-                                depth <= units::set_units(0, cm) ~ units::set_units(0, d),
-                                is.na(depth) ~ units::set_units(NA, d)),
-          .keep = "none") %>%
+                                              depth <= units::set_units(0, cm) ~ units::set_units(0, d),
+                                              is.na(depth) ~ units::set_units(NA, d)),
+                  .keep = "none") %>%
     stars::st_apply(c(1, 2), sum)
 }
 
@@ -115,7 +115,7 @@ extract_region_means <- function(raster, regions) {
 #'
 
 available_years <- function(eden_path =
-                      file.path(get_default_data_path(), 'EvergladesWadingBird/Water')) {
+                              file.path(get_default_data_path(), 'EvergladesWadingBird/Water')) {
   eden_data_files <- list.files(file.path(eden_path), pattern = '_depth.nc')
   years <- eden_data_files %>%
     stringr::str_split('_', simplify = TRUE) %>%
@@ -128,24 +128,25 @@ available_years <- function(eden_path =
 #'
 #' @title Generate annual scale water covariates using EDEN data
 #'
-#' @param eden_path path where the EDEN data should be stored
-#' @param year numeric vector of years to generate covariates for,
-#' defaults to all available years
-#' @param boundaries_file name of a shape file holding the boundaries
-#' within which to calculate covariates
 #' @param level region level to load (all, wcas, or subregions)
+#' @param eden_path path where the EDEN data should be stored
+#' @param years numeric vector of years to generate covariates for,
+#' defaults to all available years
+#' @param boundaries_path name of a shape file holding the boundaries
+#' within which to calculate covariates
 #'
 #' @return data.frame covariate data including columns for region, year,
 #' covariate, value, and the geometry of the region
 #'
 #' @export
 #'
-get_eden_covariates <- function(eden_path =
-                        file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
+get_eden_covariates <- function(level="subregions",
+                                eden_path =
+                                  file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
                                 years = available_years(eden_path),
                                 boundaries_path =
-        file.path(wader::get_default_data_path(), "EvergladesWadingBird/SiteandMethods/regions"),
-                                level="subregions") {
+                                  file.path(wader::get_default_data_path(), "EvergladesWadingBird/SiteandMethods/regions"))
+  {
 
   eden_data_files <- list.files(file.path(eden_path), pattern = '_depth.nc')
   boundaries <- load_boundaries(boundaries_path,level)
@@ -160,8 +161,8 @@ get_eden_covariates <- function(eden_path =
     year_data <- stars::read_stars(nc_files, along = "time") %>%
       setNames(., "depth") %>%
       dplyr::mutate(depth = dplyr::case_when(depth < units::set_units(0, cm) ~ units::set_units(0, cm),
-                                depth >= units::set_units(0, cm) ~ depth,
-                                is.na(depth) ~ units::set_units(NA, cm)))
+                                             depth >= units::set_units(0, cm) ~ depth,
+                                             is.na(depth) ~ units::set_units(NA, cm)))
 
     breed_start <- as.POSIXct(paste0(year, '-01-01'))
     breed_end <- as.POSIXct(paste0(year, '-06-30'))
@@ -215,4 +216,86 @@ get_eden_covariates <- function(eden_path =
     }
   }
   return(covariates)
+}
+
+#' @name get_eden_depths
+#'
+#' @title Generate regional daily mean depth using EDEN data
+#'
+#' @param level region level to load (all, wcas, or subregions)
+#' @param eden_path path where the EDEN data should be stored
+#' @param years numeric vector of years to collect, defaults to all available years
+#' @param boundaries_path name of a shape file holding the boundaries
+#' within which to calculate depth
+#'
+#' @return data.frame covariate data including columns for region, date,
+#' depth value, and the geometry of the region
+#'
+#' @export
+#'
+get_eden_depths <- function(level="subregions",
+                            eden_path =
+                            file.path(get_default_data_path(), 'EvergladesWadingBird/Water'),
+                            years = available_years(eden_path),
+                            boundaries_path =
+                            file.path(wader::get_default_data_path(), "EvergladesWadingBird/SiteandMethods/regions"))
+  {
+
+  eden_data_files <- list.files(file.path(eden_path), pattern = '_depth.nc', full.names = TRUE)
+  boundaries <- load_boundaries(boundaries_path,level)
+  examp_eden_file <- stars::read_stars(file.path(eden_path, eden_data_files[1]))
+  boundaries_utm <- sf::st_transform(boundaries, sf::st_crs(examp_eden_file))
+
+  new_data <- c()
+  for (year in years) {
+    print(paste("Processing ", year, "...", sep = ""))
+    pattern <- file.path(paste(year, "_.*_depth.nc", sep = ''))
+    nc_files <- list.files(eden_path, pattern, full.names = TRUE)
+    year_data <- stars::read_stars(nc_files, along = "time") %>%
+      setNames(., "depth") # %>%
+      # dplyr::mutate(depth = dplyr::case_when(depth < units::set_units(0, cm) ~ units::set_units(0, cm),
+      #                                       depth >= units::set_units(0, cm) ~ depth,
+      #                                       is.na(depth) ~ units::set_units(NA, cm)))
+
+    region_means <- raster::aggregate(year_data, boundaries_utm, mean, na.rm=TRUE)
+    region_sd <- raster::aggregate(year_data, boundaries_utm, sd, na.rm=TRUE)
+    region_max <- raster::aggregate(year_data, boundaries_utm, max, na.rm=TRUE)
+    region_min <- raster::aggregate(year_data, boundaries_utm, min, na.rm=TRUE)
+
+    new_year <- reshape_star(region_means, variable="depth_mean", year=year, boundaries=boundaries_utm) %>%
+                merge(reshape_star(region_sd, variable="depth_sd", year=year, boundaries=boundaries_utm)) %>%
+                merge(reshape_star(region_max, variable="depth_max", year=year, boundaries=boundaries_utm)) %>%
+                merge(reshape_star(region_min, variable="depth_min", year=year, boundaries=boundaries_utm))
+
+    new_data <- rbind(new_data, new_year)
+  }
+ return(new_data)
+}
+
+#' @name reshape_star
+#'
+#' @title Reshapes star object to dataframe
+#'
+#' @param data data to reshape
+#' @param variable value to reshape on
+#' @param year data year
+#' @param boundaries boundaries object
+#'
+#' @return data.frame depth data including columns for region, date, depth type value
+#'
+#' @export
+#'
+reshape_star <- function(data, variable="depth", year, boundaries) {
+
+ region_spdf <- boundaries_utm %>% dplyr::mutate(value = data$depth)
+ new_region <- as.data.frame(region_spdf$value) %>%
+                              dplyr::mutate_all(as.double)
+ colnames(new_region) <- as.character(as.Date(stars::st_get_dimension_values(data, 'time')))
+ new_data <- new_region %>%
+             dplyr::mutate(region = region_spdf$Name) %>%
+             tidyr::pivot_longer(starts_with(as.character(year)),
+             names_to = "date", values_to = "value") %>%
+             dplyr::select(date, region, value) %>%
+             dplyr::rename(!!variable := value)
+ return(new_data)
 }
