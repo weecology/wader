@@ -14,6 +14,9 @@ weather_report(
 \item{data}{specify 'temperature', 'precipitation'}
 
 \item{plot_year}{year to plot}
+
+\item{path}{either the file path that contains the Wading Bird folder or
+"repo", which then pulls data from the EvergladesWadingBird GitHub repository}
 }
 \description{
 Plot monthly deviations from mean

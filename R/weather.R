@@ -137,3 +137,59 @@ data = tolower(data)
   }
   print(x)
 }
+
+#' @name water_report
+#'
+#' @title Plot water gauge data
+#'
+#' @description Create a plot of water gauge data
+#'
+#' @param path Depth data location
+#' @param minyear Earliest year to include
+#' @param maxyear Most recent year to include
+#' @param wca wca to plot
+#' @inheritParams load_indicator_data
+#'
+#'
+#' @return a data.frame
+#'
+#' @export
+#'
+water_report <- function(path = get_default_data_path(),
+                       minyear = as.integer(format(Sys.Date(), "%Y"))-3,
+                       maxyear = as.integer(format(Sys.Date(), "%Y")),
+                       wca = "wca1",
+                       download_if_missing = TRUE)
+{
+  depths <- load_datafile("Water/eden_depth.csv",
+                          download_if_missing = download_if_missing) %>%
+            dplyr::mutate(date=as.Date(date))
+  monthly_means <- depths %>%
+                   dplyr::mutate(month=lubridate::month(date)) %>%
+                   dplyr::group_by(month, region) %>%
+                   dplyr::summarise(min=mean(depth_min), max=mean(depth_max),
+                                    min_sd=sd(depth_min), max_sd=sd(depth_max))
+
+   depths %>%
+    dplyr::filter(region==wca, dplyr::between(date,
+                                as.Date(paste(minyear,'-01-01',sep="")),
+                                as.Date(paste(maxyear,'-07-30',sep="")))) %>%
+    merge(monthly_means) %>%
+      dplyr::mutate(year=lubridate::year(date)) %>%
+      dplyr::mutate(min=ifelse(date==as.Date(paste(year,'-',month,'-15',sep="")), min, NA),
+                    max=ifelse(date==as.Date(paste(year,'-',month,'-15',sep="")), max, NA),
+                    min_sd=ifelse(date==as.Date(paste(year,'-',month,'-15',sep="")), min-min_sd, NA),
+                    max_sd=ifelse(date==as.Date(paste(year,'-',month,'-15',sep="")), max+max_sd, NA)) %>%
+    ggplot2::ggplot()  +
+    ggplot2::geom_line(ggplot2::aes(x=date, y=depth_mean), color="red", linewidth = 1.4) +
+    ggplot2::geom_ribbon(ggplot2::aes(x=date, y=depth_mean, ymin=depth_min, ymax=depth_max, fill="red"), alpha=0.5) +
+    ggplot2::geom_point(ggplot2::aes(x=date, y=min), shape = 4, size = 3) +
+    ggplot2::geom_point(ggplot2::aes(x=date, y=max), shape = 3, size = 3) +
+    ggplot2::geom_point(ggplot2::aes(x=date, y=min_sd), shape = 4, size = 3) +
+    ggplot2::geom_point(ggplot2::aes(x=date, y=max_sd), shape = 3, size = 3) +
+    ggplot2::labs(x="Date", y="Stage (cm)") +
+    ggplot2::scale_x_date(date_labels="%b %y", date_breaks="4 months") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.position = "none")
+
+}

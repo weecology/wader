@@ -7,7 +7,7 @@
 max_count_plot(
   path = get_default_data_path(),
   minyear = 1980,
-  maxyear = 2021,
+  maxyear = as.integer(format(Sys.Date(), "\%Y")),
   window = 3,
   download_if_missing = TRUE
 )

@@ -16,7 +16,7 @@
 #' @export
 #'
 max_count_indicator <- function(path = get_default_data_path(),
-                                  minyear = 1986, maxyear = 2021,
+                                  minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                   window = 3,
                                   download_if_missing = TRUE)
 {
@@ -56,7 +56,7 @@ max_count_indicator <- function(path = get_default_data_path(),
 #' @export
 #'
 initiation_indicator <- function(path = get_default_data_path(),
-                                minyear = 1986, maxyear = 2021,
+                                minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                 window = 3,
                                 download_if_missing = TRUE)
 {
@@ -88,7 +88,7 @@ initiation_indicator <- function(path = get_default_data_path(),
 #' @export
 #'
 coastal_indicator <- function(path = get_default_data_path(),
-                                minyear = 1986, maxyear = 2021,
+                                minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                 window = 3,
                                 download_if_missing = TRUE)
 {
@@ -120,7 +120,7 @@ coastal_indicator <- function(path = get_default_data_path(),
 #' @export
 #'
 foraging_indicator <- function(path = get_default_data_path(),
-                              minyear = 1986, maxyear = 2021,
+                              minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                               window = 3,
                               download_if_missing = TRUE)
 {
@@ -158,7 +158,7 @@ foraging_indicator <- function(path = get_default_data_path(),
 #' @export
 #'
 supercolony_indicator <- function(path = get_default_data_path(),
-                               minyear = 1931, maxyear = 2021,
+                               minyear = 1931, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                window = 3,
                                download_if_missing = TRUE)
 {
@@ -189,7 +189,7 @@ supercolony_indicator <- function(path = get_default_data_path(),
 #' @export
 #'
 plot_foraging <- function(path = get_default_data_path(),
-                               minyear = 1986, maxyear = 2021,
+                               minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                window = 3,
                                download_if_missing = TRUE)
 {
@@ -198,15 +198,12 @@ plot_foraging <- function(path = get_default_data_path(),
                      minyear = minyear, maxyear = maxyear,
                      window = window,
                      download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<=32 ~ "black",
-                                           .data$proportion_mean>32 ~ "darkgrey")) %>%
 
-  ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
+  ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color="steelblue")) +
                   ggplot2::geom_point(alpha=2, size=3) +
                   ggplot2::scale_colour_identity() +
                   ggplot2::theme_bw() +
-                  ggplot2::ylab("tactile/visual") +
-                  ggplot2::geom_hline(yintercept=30, linetype=2, color="black", size=.5)
+                  ggplot2::ylab("tactile/visual")
   }
 
 #' @name plot_coastal
@@ -227,7 +224,7 @@ plot_foraging <- function(path = get_default_data_path(),
 #' @export
 #'
 plot_coastal <- function(path = get_default_data_path(),
-                          minyear = 1986, maxyear = 2021,
+                          minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                           window = 3,
                           download_if_missing = TRUE)
 {
@@ -235,15 +232,12 @@ plot_coastal <- function(path = get_default_data_path(),
                      minyear = minyear, maxyear = maxyear,
                      window = window,
                      download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<=.5 ~ "black",
-                                           .data$proportion_mean>.5 ~ "darkgrey")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color="steelblue")) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
     ggplot2::theme_bw() +
-    ggplot2::ylab("Average proportion nests in coastal colonies") +
-    ggplot2::geom_hline(yintercept=.5, linetype=2, color="black", size=.5)
+    ggplot2::ylab("Average proportion nests in coastal colonies")
 }
 
 #' @name plot_initiation
@@ -264,7 +258,7 @@ plot_coastal <- function(path = get_default_data_path(),
 #' @export
 #'
 plot_initiation <- function(path = get_default_data_path(),
-                         minyear = 1986, maxyear = 2021,
+                         minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                          window = 3,
                          download_if_missing = TRUE)
 {
@@ -272,15 +266,14 @@ plot_initiation <- function(path = get_default_data_path(),
                     minyear = minyear, maxyear = maxyear,
                     window = window,
                     download_if_missing = download_if_missing) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$date_score_mean<=4.5 ~ "black",
-                                           .data$date_score_mean>4.5 ~ "darkgrey")) %>%
+#    dplyr::mutate(color = dplyr::case_when(.data$date_score_mean<=4.5 ~ "black",
+#                                           .data$date_score_mean>4.5 ~ "darkgrey")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, date_score_mean, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(year, date_score_mean, color="steelblue")) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
     ggplot2::theme_bw() +
-    ggplot2::ylab("Wood stork nesting date score") +
-    ggplot2::geom_hline(yintercept=4.5, linetype=2, color="black", size=.5)
+    ggplot2::ylab("Wood stork nesting date score")
 }
 
 #' @name plot_supercolony
@@ -301,7 +294,7 @@ plot_initiation <- function(path = get_default_data_path(),
 #' @export
 #'
 plot_supercolony <- function(path = get_default_data_path(),
-                            minyear = 1986, maxyear = 2021,
+                            minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                             window = 3,
                             download_if_missing = TRUE)
 {
@@ -338,7 +331,7 @@ plot_supercolony <- function(path = get_default_data_path(),
 #' @export
 #'
 max_count_plot <- function(path = get_default_data_path(),
-                                minyear = 1980, maxyear = 2021,
+                                minyear = 1980, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                 window = 3,
                                 download_if_missing = TRUE)
 {
@@ -347,7 +340,6 @@ max_count_plot <- function(path = get_default_data_path(),
                 download_if_missing = download_if_missing) %>%
     dplyr::filter(.data$species %in% c("greg","sneg","whib","wost")) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
-    dplyr::select("region") %>%
     dplyr::arrange(.data$species, .data$year) %>%
     dplyr::group_by(.data$species) %>%
     dplyr::mutate(                             # rolling average
@@ -360,7 +352,7 @@ max_count_plot <- function(path = get_default_data_path(),
     ) %>%
 
     ggplot2::ggplot(ggplot2::aes(x=year, y=count_mean, group=species, color=species)) +
-    ggplot2::geom_line(size=1.05) +
+    ggplot2::geom_line(linewidth=1.05) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position="bottom") +
     ggplot2::ylab("Number of nesting pairs (3-yr running ave)")
