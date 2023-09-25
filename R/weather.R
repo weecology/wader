@@ -162,7 +162,7 @@ water_report <- function(path = get_default_data_path(),
                        download_if_missing = TRUE)
 {
   depths <- load_datafile("Water/eden_depth.csv",
-                          download_if_missing = download_if_missing) %>%
+                          download_if_missing = download_if_missing, path = path) %>%
             dplyr::mutate(date=as.Date(date))
   monthly_means <- depths %>%
                    dplyr::mutate(month=lubridate::month(date)) %>%
