@@ -30,5 +30,5 @@ a data.frame
 }
 \description{
 Create a table of rolling averages for the earliest stork nesting dates,
-by year, and plot with thresholds
+by year, and plot with thresholds. Initiation in November is a 5, initiation in March is a 1.
 }

@@ -158,7 +158,7 @@ foraging_indicator <- function(path = get_default_data_path(),
 #' @export
 #'
 supercolony_indicator <- function(path = get_default_data_path(),
-                               minyear = 1931, maxyear = as.integer(format(Sys.Date(), "%Y")),
+                               minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
                                window = 3,
                                download_if_missing = TRUE)
 {
@@ -195,17 +195,17 @@ plot_foraging <- function(path = get_default_data_path(),
 {
 
   foraging_indicator(path = path,
-                     minyear = minyear, maxyear = maxyear,
                      window = window,
                      download_if_missing = download_if_missing) %>%
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<1 ~ "red4",
                           dplyr::between(.data$proportion_mean,1,32) ~ "orange",
                                          .data$proportion_mean>32 ~ "darkgreen")) %>%
 
     ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
-    ggplot2::geom_hline(yintercept=32, linetype=2, color="darkgreen", size=.5) +
-    ggplot2::geom_hline(yintercept=2, linetype=2, color="orange", size=.5) +
-    ggplot2::geom_hline(yintercept=1, linetype=2, color="red4", size=.5) +
+    ggplot2::geom_hline(yintercept=32, linetype=2, color="darkgreen", linewidth=.5) +
+    ggplot2::geom_hline(yintercept=2, linetype=2, color="orange", linewidth=.5) +
+    ggplot2::geom_hline(yintercept=1, linetype=2, color="red4", linewidth=.5) +
                   ggplot2::geom_point(alpha=2, size=3) +
                   ggplot2::scale_colour_identity() +
                   ggplot2::theme_bw() +
@@ -235,17 +235,17 @@ plot_coastal <- function(path = get_default_data_path(),
                           download_if_missing = TRUE)
 {
   coastal_indicator(path = path,
-                     minyear = minyear, maxyear = maxyear,
                      window = window,
                      download_if_missing = download_if_missing) %>%
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(color = dplyr::case_when(.data$proportion_mean<.1 ~ "red4",
                                            dplyr::between(.data$proportion_mean,.1,.5) ~ "orange",
                                            .data$proportion_mean>.5 ~ "darkgreen")) %>%
 
     ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
-    ggplot2::geom_hline(yintercept=.5, linetype=2, color="darkgreen", size=.5) +
-    ggplot2::geom_hline(yintercept=.25, linetype=2, color="orange", size=.5) +
-    ggplot2::geom_hline(yintercept=.1, linetype=2, color="red4", size=.5) +
+    ggplot2::geom_hline(yintercept=.5, linetype=2, color="darkgreen", linewidth=.5) +
+    ggplot2::geom_hline(yintercept=.25, linetype=2, color="orange", linewidth=.5) +
+    ggplot2::geom_hline(yintercept=.1, linetype=2, color="red4", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
     ggplot2::theme_bw() +
@@ -257,7 +257,7 @@ plot_coastal <- function(path = get_default_data_path(),
 #' @title Plot wood stork nest initiation data
 #'
 #' @description Create a table of rolling averages for the earliest stork nesting dates,
-#' by year, and plot with thresholds
+#' by year, and plot with thresholds. Initiation in November is a 5, initiation in March is a 1.
 #'
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
@@ -275,20 +275,22 @@ plot_initiation <- function(path = get_default_data_path(),
                          download_if_missing = TRUE)
 {
   initiation_indicator(path = path,
-                    minyear = minyear, maxyear = maxyear,
                     window = window,
                     download_if_missing = download_if_missing) %>%
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(color = dplyr::case_when(.data$date_score_mean<1.5 ~ "red4",
                                            dplyr::between(.data$date_score_mean,1.5,2.5) ~ "orange",
                                            .data$date_score_mean>2.5 ~ "darkgreen")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, date_score_mean, color=color)) +
-    ggplot2::geom_hline(yintercept=2.5, linetype=2, color="orange", size=.5) +
-    ggplot2::geom_hline(yintercept=1.5, linetype=2, color="red4", size=.5) +
+    ggplot2::ggplot(ggplot2::aes(date_score_mean, year, color=color)) +
+    ggplot2::geom_vline(xintercept=2.5, linetype=2, color="orange", linewidth=.5) +
+    ggplot2::geom_vline(xintercept=1.5, linetype=2, color="red4", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::scale_colour_identity() +
+    ggplot2::scale_x_reverse(limits=c(4,1), breaks=c(4,3,2,1),labels=c("December","January","February","March")) +
     ggplot2::theme_bw() +
-    ggplot2::ylab("Wood stork nesting date score")
+    ggplot2::ylab("Year") +
+    ggplot2::xlab("Initiation Date")
 }
 
 #' @name plot_supercolony
@@ -309,14 +311,15 @@ plot_initiation <- function(path = get_default_data_path(),
 #' @export
 #'
 plot_supercolony <- function(path = get_default_data_path(),
-                            minyear = 1986, maxyear = as.integer(format(Sys.Date(), "%Y")),
+                            minyear = 2001, maxyear = as.integer(format(Sys.Date(), "%Y")),
                             window = 3,
                             download_if_missing = TRUE)
 {
   supercolony_indicator(path = path,
-                      minyear = minyear, maxyear = maxyear,
                       window = window,
                       download_if_missing = download_if_missing) %>%
+
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(color = dplyr::case_when(.data$interval_mean>5 ~ "red4",
                                            dplyr::between(.data$interval_mean,1.6,5) ~ "orange",
                                            .data$interval_mean<1.6 ~ "darkgreen")) %>%

@@ -6,7 +6,7 @@
 \usage{
 plot_supercolony(
   path = get_default_data_path(),
-  minyear = 1986,
+  minyear = 2001,
   maxyear = as.integer(format(Sys.Date(), "\%Y")),
   window = 3,
   download_if_missing = TRUE
