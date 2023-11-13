@@ -285,10 +285,11 @@ plot_initiation <- function(path = get_default_data_path(),
     ggplot2::ggplot(ggplot2::aes(date_score_mean, year, color=color)) +
     ggplot2::geom_vline(xintercept=2.5, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_vline(xintercept=1.5, linetype=2, color="red4", linewidth=.5) +
-    ggplot2::geom_point(alpha=2, size=3) +
+    ggplot2::geom_point(alpha=2, size=3, shape=15) +
     ggplot2::scale_colour_identity() +
     ggplot2::scale_x_reverse(limits=c(4,1), breaks=c(4,3,2,1),labels=c("December","January","February","March")) +
     ggplot2::theme_bw() +
+    ggplot2::theme(panel.border = ggplot2::element_blank()) +
     ggplot2::ylab("Year") +
     ggplot2::xlab("Initiation Date")
 }
