@@ -224,6 +224,7 @@ dry_down <- function(path = get_default_data_path(),
                   year=lubridate::year(date),
                   month=lubridate::month(date)) %>%
     dplyr::select(-c(depth_min,depth_sd,depth_mean)) %>%
+    dplyr::mutate(depth_max=10*depth_max) %>%
     dplyr::group_by(year,month,region) %>%
     dplyr::slice(which.max(depth_max)) %>%
     dplyr::filter(month %in% c(11,1,3)) %>%
