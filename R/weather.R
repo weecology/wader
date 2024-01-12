@@ -193,3 +193,51 @@ water_report <- function(path = get_default_data_path(),
     ggplot2::theme(legend.position = "none")
 
 }
+
+#' @name dry_down
+#'
+#' @title Calculate dry down rates from water gauge data
+#'
+#' @description Calculate dry down rates from water gauge data, by subregion.
+#' Calculate days from high to high November to January (early) and January to March (late),
+#' calculate max difference relative to number of days. Also calculate exceedance, % of
+#' previous years with slower dry down rates.
+#'
+#' @param path Depth data location
+#' @param minyear Earliest year to include
+#' @param maxyear Most recent year to include
+#' @inheritParams load_indicator_data
+#'
+#'
+#' @return a data.frame
+#'
+#' @export
+#'
+dry_down <- function(path = get_default_data_path(),
+                         minyear = as.integer(format(Sys.Date(), "%Y"))-6,
+                         maxyear = as.integer(format(Sys.Date(), "%Y")),
+                         download_if_missing = TRUE)
+{
+  depths <- load_datafile("Water/eden_depth.csv",
+                          download_if_missing = download_if_missing, path = path) %>%
+    dplyr::mutate(date=as.Date(date),
+                  year=lubridate::year(date),
+                  month=lubridate::month(date)) %>%
+    dplyr::select(-c(depth_min,depth_sd,depth_mean)) %>%
+    dplyr::group_by(year,month,region) %>%
+    dplyr::slice(which.max(depth_max)) %>%
+    dplyr::filter(month %in% c(11,1,3)) %>%
+    dplyr::mutate(year = replace(year,month==11,year+1)) %>%
+    dplyr::mutate(month = ifelse(month == 1, "jan", ifelse(month == 3, "mar", "nov"))) %>%
+    tidyr::pivot_wider(names_from = month,
+                       values_from = c(date,depth_max)) %>%
+    dplyr::mutate(early_dry = (depth_max_nov-depth_max_jan)/(as.integer(date_jan-date_nov)),
+                  late_dry = (depth_max_jan-depth_max_mar)/(as.integer(date_mar-date_jan))) %>%
+    na.omit() %>%
+    dplyr::group_by(region) %>%
+    dplyr::mutate(exceedance_early = purrr::map_int(early_dry, ~ sum(.x > early_dry))/dplyr::n()*100,
+                  exceedance_late = purrr::map_int(late_dry, ~ sum(.x > late_dry))/dplyr::n()*100) %>%
+    dplyr::filter(minyear <= year, year <= maxyear) %>%
+    dplyr::select(year,region,early_dry,late_dry,exceedance_early,exceedance_late)
+return(depths)
+  }

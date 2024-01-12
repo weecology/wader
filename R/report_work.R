@@ -274,15 +274,16 @@ plot_initiation <- function(path = get_default_data_path(),
                          window = 3,
                          download_if_missing = TRUE)
 {
-  initiation_indicator(path = path,
-                    window = window,
-                    download_if_missing = download_if_missing) %>%
+  load_datafile("Indicators/stork_initiation.csv",
+                download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
-    dplyr::mutate(color = dplyr::case_when(.data$date_score_mean<1.5 ~ "red4",
-                                           dplyr::between(.data$date_score_mean,1.5,2.5) ~ "orange",
-                                           .data$date_score_mean>2.5 ~ "darkgreen")) %>%
+    dplyr::arrange(.data$year) %>%
+    dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
+    dplyr::mutate(color = dplyr::case_when(.data$date_score<1.5 ~ "red4",
+                                           dplyr::between(.data$date_score,1.5,2.5) ~ "orange",
+                                           .data$date_score>2.5 ~ "darkgreen")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, date_score_mean, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(year, date_score, color=color)) +
     ggplot2::geom_hline(yintercept=2.5, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_hline(yintercept=1.5, linetype=2, color="red4", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3, shape=15) +
