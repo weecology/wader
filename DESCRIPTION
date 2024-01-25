@@ -30,7 +30,6 @@ Imports:
     lubridate,
     magrittr,
     ncdf4,
-    raster,
     rlang,
     rvest,
     sf,
