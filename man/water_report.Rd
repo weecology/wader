@@ -8,7 +8,7 @@ water_report(
   path = get_default_data_path(),
   minyear = as.integer(format(Sys.Date(), "\%Y")) - 3,
   maxyear = as.integer(format(Sys.Date(), "\%Y")),
-  wca = "wca1",
+  wca = "1",
   download_if_missing = TRUE
 )
 }
