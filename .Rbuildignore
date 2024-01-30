@@ -1,2 +1,15 @@
+^Meta$
+^doc$
+^codecov\.yml$
+^LICENSE\.md$
+^CONTRIBUTING\.md$
+^CODE_OF_CONDUCT\.md$
+^\.zenodo\.json$
+^README\.Rmd$
 ^wader\.Rproj$
+^.*\.Rproj$
 ^\.Rproj\.user$
+^paper$
+^.Renviron$
+^_pkgdown\.yml$
+^\.github$

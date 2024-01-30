@@ -30,7 +30,7 @@ max_counts <- function(path = get_default_data_path(),
 
    regions <- load_datafile("Indicators/max_count.csv") %>%
      dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
-     dplyr::mutate(region = replace(.data$region, .data$region=="loxahatchee", "wca1")) %>%
+     dplyr::mutate(region = replace(.data$region, .data$region=="loxahatchee", "1")) %>%
      dplyr::arrange(.data$species, .data$year)
 
   if(level == "colony") {out <- colonies}
@@ -38,19 +38,19 @@ max_counts <- function(path = get_default_data_path(),
   if(level == "subregion") {
     colony_table <- load_datafile("SiteandMethods/colonies.csv") %>% dplyr::select(-c("latitude","longitude"))
     out <- colonies %>%
-      dplyr::left_join(colony_table, by = dplyr::join_by(group_id, colony)) %>%
+      dplyr::left_join(colony_table, by = dplyr::join_by(.data$group_id, .data$colony)) %>%
       dplyr::group_by(.data$year, .data$subregion, .data$species) %>%
       dplyr::summarise(count = sum(.data$count)) %>%
-      dplyr::filter(subregion %in% c("2a","2b", "3an", "3as", "3ase", "3b")) %>%
+      dplyr::filter(.data$subregion %in% c("2a","2b", "3an", "3as", "3ase", "3b")) %>%
       dplyr::bind_rows(regions) %>%
-      dplyr::filter(region %in% c("wca1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
+      dplyr::filter(.data$region %in% c("1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
       dplyr::select("year", "region", "species", "count") %>%
       dplyr::arrange(.data$region, .data$species, .data$year)
   }
 
   if(level == "region") {
     out <- regions %>%
-      dplyr::filter(region %in% c("wcas", "enp")) %>%
+      dplyr::filter(.data$region %in% c("wcas", "enp")) %>%
       dplyr::arrange(.data$species, .data$region, .data$year)
     }
 

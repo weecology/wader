@@ -202,7 +202,7 @@ plot_foraging <- function(path = get_default_data_path(),
                           dplyr::between(.data$proportion_mean,1,32) ~ "orange",
                                          .data$proportion_mean>32 ~ "darkgreen")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(.data$year, .data$proportion_mean, color=.data$color)) +
     ggplot2::geom_hline(yintercept=32, linetype=2, color="darkgreen", linewidth=.5) +
     ggplot2::geom_hline(yintercept=2, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_hline(yintercept=1, linetype=2, color="red4", linewidth=.5) +
@@ -242,7 +242,7 @@ plot_coastal <- function(path = get_default_data_path(),
                                            dplyr::between(.data$proportion_mean,.1,.5) ~ "orange",
                                            .data$proportion_mean>.5 ~ "darkgreen")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, proportion_mean, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(.data$year, .data$proportion_mean, color=.data$color)) +
     ggplot2::geom_hline(yintercept=.5, linetype=2, color="darkgreen", linewidth=.5) +
     ggplot2::geom_hline(yintercept=.25, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_hline(yintercept=.1, linetype=2, color="red4", linewidth=.5) +
@@ -283,7 +283,7 @@ plot_initiation <- function(path = get_default_data_path(),
                                            dplyr::between(.data$date_score,1.5,2.5) ~ "orange",
                                            .data$date_score>2.5 ~ "darkgreen")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, date_score, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(.data$year, .data$date_score, color=.data$color)) +
     ggplot2::geom_hline(yintercept=2.5, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_hline(yintercept=1.5, linetype=2, color="red4", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3, shape=15) +
@@ -327,7 +327,7 @@ plot_supercolony <- function(path = get_default_data_path(),
                                            dplyr::between(.data$interval_mean,1.6,5) ~ "orange",
                                            .data$interval_mean<1.6 ~ "darkgreen")) %>%
 
-    ggplot2::ggplot(ggplot2::aes(year, interval_mean, color=color)) +
+    ggplot2::ggplot(ggplot2::aes(.data$year, .data$interval_mean, color=.data$color)) +
     ggplot2::geom_hline(yintercept=1.6, linetype=2, color="darkgreen", linewidth=.5) +
     ggplot2::geom_hline(yintercept=2.5, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_hline(yintercept=5, linetype=2, color="red4", linewidth=.5) +
@@ -375,7 +375,7 @@ max_count_plot <- function(path = get_default_data_path(),
       )
     ) %>%
 
-    ggplot2::ggplot(ggplot2::aes(x=year, y=count_mean, group=species, color=species)) +
+    ggplot2::ggplot(ggplot2::aes(x=.data$year, y=.data$count_mean, group=.data$species, color=.data$species)) +
     ggplot2::geom_line(linewidth=1.05) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position="bottom") +
