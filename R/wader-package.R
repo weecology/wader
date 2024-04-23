@@ -5,7 +5,6 @@
 #' It contains a set of functions to download, clean, and summarize the data.
 #'
 #' @name wader
-#' @docType package
 #' @keywords package
 #'
 #' @importFrom lubridate "%m+%"
@@ -14,8 +13,7 @@
 #' @importFrom stats median na.omit sd setNames time
 #' @importFrom httr content GET stop_for_status
 #'
-
-NULL
+"_PACKAGE"
 
 ## quiets concerns of R CMD check re: variables used in NSE functions
 if (getRversion() >= "2.15.1") utils::globalVariables(

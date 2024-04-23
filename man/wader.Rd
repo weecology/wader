@@ -2,11 +2,21 @@
 % Please edit documentation in R/wader-package.R
 \docType{package}
 \name{wader}
+\alias{wader-package}
 \alias{wader}
 \title{Creates summaries of the EvergladesWadingBird data}
 \description{
 This package is designed to be an interface to the Wading Bird data,
 which resides online at \url{https://github.com/weecology/EvergladesWadingBird}.
 It contains a set of functions to download, clean, and summarize the data.
+}
+\author{
+\strong{Maintainer}: Glenda M. Yenni \email{glenda@weecology.org} (\href{https://orcid.org/0000-0001-6969-1848}{ORCID})
+
+Authors:
+\itemize{
+  \item Ethan P. White \email{ethan@weecology.org} (\href{https://orcid.org/0000-0001-6728-7745}{ORCID})
+}
+
 }
 \keyword{package}

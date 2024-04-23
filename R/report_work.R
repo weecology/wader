@@ -67,6 +67,9 @@ initiation_indicator <- function(path = get_default_data_path(),
     dplyr::arrange(.data$year) %>%
     dplyr::mutate(date_score_mean = zoo::rollapply(.data$date_score, FUN="mean",
                                                    width=window, align="right",
+                                                   partial = TRUE),
+                  date_score_sd = zoo::rollapply(.data$date_score, FUN="sd",
+                                                   width=window, align="right",
                                                    partial = TRUE))
 }
 
@@ -98,6 +101,9 @@ coastal_indicator <- function(path = get_default_data_path(),
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::arrange(.data$year) %>%
     dplyr::mutate(proportion_mean = zoo::rollapply(.data$proportion, FUN="mean",
+                                                   width=window, align="right",
+                                                   partial = TRUE),
+                  proportion_sd = zoo::rollapply(.data$proportion, FUN="sd",
                                                    width=window, align="right",
                                                    partial = TRUE))
 }
@@ -137,6 +143,9 @@ foraging_indicator <- function(path = get_default_data_path(),
     dplyr::arrange(.data$year) %>%
     dplyr::mutate(proportion_mean = zoo::rollapply(.data$proportion, FUN="mean",
                                                    width=window, align="right",
+                                                   partial = TRUE),
+                  proportion_sd = zoo::rollapply(.data$proportion, FUN="sd",
+                                                   width=window, align="right",
                                                    partial = TRUE))
 }
 
@@ -168,7 +177,10 @@ supercolony_indicator <- function(path = get_default_data_path(),
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(interval_mean = zoo::rollapply(.data$ibis_interval, FUN="mean",
                                                    width=window, align="right",
-                                                   partial = TRUE))
+                                                   partial = TRUE),
+                  interval_sd = zoo::rollapply(.data$ibis_interval, FUN="sd",
+                                                 width=window, align="right",
+                                                 partial = TRUE))
 }
 
 #' @name plot_foraging
