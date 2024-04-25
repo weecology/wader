@@ -27,7 +27,8 @@ foraging_analysis <- function(path = get_default_data_path(),
 
   A <- ggplot(foraging, aes(x=proportion_mean, fill=period)) +
     geom_density(adjust = 1, alpha=0.5) +
-    xlim(0,10) +
+    geom_vline(xintercept=32, linetype=2, color="darkgreen", linewidth=.5) +
+    xlim(0,35) +
     labs(title="Average Foraging Ratio", x="tactile/visual", y = "density") +
     theme_classic() +
     theme(legend.position = c(.85,.9))
@@ -37,6 +38,7 @@ foraging_analysis <- function(path = get_default_data_path(),
     geom_line(color="black", show.legend = FALSE) +
     geom_ribbon(alpha=0.2, fill="grey", show.legend = FALSE) +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period), show.legend = FALSE) +
+    geom_hline(yintercept=32, linetype=2, color="darkgreen", linewidth=.5) +
     labs(x="Year", y = "tactile/visual") +
     theme_classic()
 
@@ -72,6 +74,7 @@ initiation <- initiation_indicator(minyear = 2004) %>%
 
   A <- ggplot(initiation, aes(x=date_score_mean, fill=period)) +
   geom_density(adjust = 1, alpha=0.5) +
+  geom_vline(xintercept=2.5, linetype=2, color="darkgreen", linewidth=.5) +
   scale_x_reverse(limits=c(5,-.2), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
   labs(title="Average Stork Nest Initiation Date", x="Date Score", y = "density") +
   theme_classic() +
@@ -82,6 +85,7 @@ initiation <- initiation_indicator(minyear = 2004) %>%
   geom_line(color="black") +
   geom_ribbon(alpha=0.2, fill="grey") +
   geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
+  geom_hline(yintercept=2.5, linetype=2, color="darkgreen", linewidth=.5) +
   scale_y_reverse(limits=c(4.55,0), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
   labs(x="Year", y = "Date Score") +
   theme_classic() +
@@ -119,7 +123,8 @@ library(ggplot2)
 
   A <- ggplot(coastal, aes(x=proportion_mean, fill=period)) +
     geom_density(adjust = 1.5, alpha=0.5) +
-    xlim(0,.5) +
+    geom_vline(xintercept=.5, linetype=2, color="darkgreen", linewidth=.5) +
+    xlim(0,.6) +
     labs(title="Average proportion nests in coastal colonies", x="proportion coastal", y = "density") +
     theme_classic() +
     theme(legend.position=c(.9,.8))
@@ -129,6 +134,7 @@ library(ggplot2)
     geom_line(color="black") +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
+    geom_hline(yintercept=.5, linetype=2, color="darkgreen", linewidth=.5) +
     labs(x="Year", y = "proportion coastal") +
     theme_classic() +
     theme(legend.position="none")
@@ -165,6 +171,7 @@ library(ggplot2)
 
   A <- ggplot(supercolony, aes(x=interval_mean, fill=period)) +
     geom_density(adjust = 1, alpha=0.5) +
+    geom_vline(xintercept=1.6, linetype=2, color="darkgreen", linewidth=.5) +
     xlim(0,3) +
     labs(title="Ibis supercolony mean interval", x="mean interval", y = "density") +
     theme_classic() +
@@ -175,6 +182,7 @@ library(ggplot2)
     geom_line(color="black") +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
+    geom_hline(yintercept=1.6, linetype=2, color="darkgreen", linewidth=.5) +
     labs(x="Year", y = "mean interval") +
     theme_classic() +
     theme(legend.position="none")
