@@ -21,28 +21,33 @@ foraging_analysis <- function(path = get_default_data_path(),
                                 download_if_missing = TRUE)
 {
   library(ggplot2)
+  library(ggside)
   foraging <- foraging_indicator(minyear = 2004) %>%
-    dplyr::mutate(period="historic") %>%
-    dplyr::mutate(period = replace(period, year > 2016, "modern"))
+    dplyr::mutate(period="baseline") %>%
+    dplyr::mutate(period = replace(period, year > 2016, "current"))
 
-  A <- ggplot(foraging, aes(x=proportion_mean, fill=period)) +
-    geom_density(adjust = 1, alpha=0.5) +
-    geom_vline(xintercept=32, linetype=2, color="darkgreen", linewidth=.5) +
-    xlim(0,35) +
-    labs(title="Average Foraging Ratio", x="tactile/visual", y = "density") +
-    theme_classic() +
-    theme(legend.position = c(.85,.9))
-
-  B <- ggplot(foraging, aes(x=year, y=proportion_mean,
-                         ymin=proportion_mean-proportion_sd, ymax=proportion_mean+proportion_sd)) +
-    geom_line(color="black", show.legend = FALSE) +
-    geom_ribbon(alpha=0.2, fill="grey", show.legend = FALSE) +
-    geom_ribbon(alpha=0.5, aes(color=NULL, fill=period), show.legend = FALSE) +
-    geom_hline(yintercept=32, linetype=2, color="darkgreen", linewidth=.5) +
+  ggplot(foraging, aes(x=year, y=proportion_mean,
+                       ymin=proportion_mean-proportion_sd, ymax=proportion_mean+proportion_sd)) +
+    geom_point(aes(color=period), size=2.2) +
+    geom_line(color="black", linewidth=1.1) +
+    geom_ribbon(alpha=0.2, fill="grey") +
+    geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
+    geom_hline(yintercept=32, linetype=2, color="darkgreen", linewidth=1) +
+    ylim(0,35) +
     labs(x="Year", y = "tactile/visual") +
-    theme_classic()
-
-  cowplot::plot_grid(A, B, labels = NULL)
+    theme_classic() +
+    theme(legend.position="none") +
+    guides(fill = guide_legend(byrow = TRUE)) +
+    geom_ysidedensity(aes(fill=period), alpha = .5) +
+    geom_ysidehline(yintercept = 32, linetype=2, color="darkgreen", linewidth=1) +
+    theme(
+      ggside.panel.border = element_blank(),
+      ggside.panel.grid = element_blank(),
+      ggside.panel.background = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks = element_blank(),
+      ggside.panel.scale = .2) +
+    guides(color = "none", fill = "none")
 }
 
 #' @name initiation_analysis
@@ -68,30 +73,33 @@ initiation_analysis <- function(path = get_default_data_path(),
                                  download_if_missing = TRUE)
 {
 library(ggplot2)
+library(ggside)
 initiation <- initiation_indicator(minyear = 2004) %>%
-              dplyr::mutate(period="historic") %>%
-              dplyr::mutate(period = replace(period, year > 2016, "modern"))
+              dplyr::mutate(period="baseline") %>%
+              dplyr::mutate(period = replace(period, year > 2016, "current"))
 
-  A <- ggplot(initiation, aes(x=date_score_mean, fill=period)) +
-  geom_density(adjust = 1, alpha=0.5) +
-  geom_vline(xintercept=2.5, linetype=2, color="darkgreen", linewidth=.5) +
-  scale_x_reverse(limits=c(5,-.2), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
-  labs(title="Average Stork Nest Initiation Date", x="Date Score", y = "density") +
-  theme_classic() +
-  theme(legend.position=c(.9,.8))
-
-  B <- ggplot(initiation, aes(x=year, y=date_score_mean,
+  ggplot(initiation, aes(x=year, y=date_score_mean,
                        ymin=date_score_mean-date_score_sd, ymax=date_score_mean+date_score_sd)) +
-  geom_line(color="black") +
+  geom_point(aes(color=period), size=2.2) +
+  geom_line(color="black", linewidth=1.1) +
   geom_ribbon(alpha=0.2, fill="grey") +
   geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-  geom_hline(yintercept=2.5, linetype=2, color="darkgreen", linewidth=.5) +
-  scale_y_reverse(limits=c(4.55,0), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
+  geom_hline(yintercept=2.5, linetype=2, color="darkgreen", linewidth=1) +
+  scale_y_reverse(limits=c(5,-.2), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
   labs(x="Year", y = "Date Score") +
   theme_classic() +
-  theme(legend.position="none")
-
-  cowplot::plot_grid(A, B, labels = NULL)
+  theme(legend.position="none") +
+    guides(fill = guide_legend(byrow = TRUE)) +
+    geom_ysidedensity(aes(fill=period), alpha = .5) +
+    geom_ysidehline(yintercept = 2.5, linetype=2, color="darkgreen", linewidth=1) +
+    theme(
+      ggside.panel.border = element_blank(),
+      ggside.panel.grid = element_blank(),
+      ggside.panel.background = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks = element_blank(),
+      ggside.panel.scale = .2) +
+    guides(color = "none", fill = "none")
 }
 
 #' @name coastal_analysis
@@ -117,29 +125,33 @@ coastal_analysis <- function(path = get_default_data_path(),
                                 download_if_missing = TRUE)
 {
 library(ggplot2)
+library(ggside)
   coastal <- coastal_indicator(minyear = 2004) %>%
     dplyr::mutate(period="historic") %>%
     dplyr::mutate(period = replace(period, year > 2016, "modern"))
 
-  A <- ggplot(coastal, aes(x=proportion_mean, fill=period)) +
-    geom_density(adjust = 1.5, alpha=0.5) +
-    geom_vline(xintercept=.5, linetype=2, color="darkgreen", linewidth=.5) +
-    xlim(0,.6) +
-    labs(title="Average proportion nests in coastal colonies", x="proportion coastal", y = "density") +
-    theme_classic() +
-    theme(legend.position=c(.9,.8))
-
-  B <- ggplot(coastal, aes(x=year, y=proportion_mean,
-                         ymin=proportion_mean-proportion_sd, ymax=proportion_mean+proportion_sd)) +
-    geom_line(color="black") +
+  ggplot(coastal, aes(x=year, y=proportion_mean,
+                      ymin=proportion_mean-proportion_sd, ymax=proportion_mean+proportion_sd)) +
+    geom_point(aes(color=period), size=2.2) +
+    geom_line(color="black", linewidth=1.1) +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-    geom_hline(yintercept=.5, linetype=2, color="darkgreen", linewidth=.5) +
+    geom_hline(yintercept=.5, linetype=2, color="darkgreen", linewidth=1) +
+    ylim(0,.6) +
     labs(x="Year", y = "proportion coastal") +
     theme_classic() +
-    theme(legend.position="none")
-
-  cowplot::plot_grid(A, B, labels = NULL)
+    theme(legend.position="none") +
+    guides(fill = guide_legend(byrow = TRUE)) +
+    geom_ysidedensity(aes(fill=period), alpha = .5) +
+    geom_ysidehline(yintercept = .5, linetype=2, color="darkgreen", linewidth=1) +
+    theme(
+      ggside.panel.border = element_blank(),
+      ggside.panel.grid = element_blank(),
+      ggside.panel.background = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks = element_blank(),
+      ggside.panel.scale = .2) +
+    guides(color = "none", fill = "none")
 }
 
 #' @name supercolony_analysis
@@ -165,27 +177,31 @@ supercolony_analysis <- function(path = get_default_data_path(),
                              download_if_missing = TRUE)
 {
 library(ggplot2)
+library(ggside)
   supercolony <- supercolony_indicator(minyear = 2004) %>%
     dplyr::mutate(period="historic") %>%
     dplyr::mutate(period = replace(period, year > 2016, "modern"))
 
-  A <- ggplot(supercolony, aes(x=interval_mean, fill=period)) +
-    geom_density(adjust = 1, alpha=0.5) +
-    geom_vline(xintercept=1.6, linetype=2, color="darkgreen", linewidth=.5) +
-    xlim(0,3) +
-    labs(title="Ibis supercolony mean interval", x="mean interval", y = "density") +
-    theme_classic() +
-    theme(legend.position=c(.9,.8))
-
-  B <- ggplot(supercolony, aes(x=year, y=interval_mean,
-                      ymin=interval_mean-interval_sd, ymax=interval_mean+interval_sd)) +
-    geom_line(color="black") +
+  ggplot(supercolony, aes(x=year, y=interval_mean,
+                          ymin=interval_mean-interval_sd, ymax=interval_mean+interval_sd)) +
+    geom_point(aes(color=period), size=2.2) +
+    geom_line(color="black", linewidth=1.1) +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-    geom_hline(yintercept=1.6, linetype=2, color="darkgreen", linewidth=.5) +
+    geom_hline(yintercept=1.6, linetype=2, color="darkgreen", linewidth=1) +
+    ylim(0,3) +
     labs(x="Year", y = "mean interval") +
     theme_classic() +
-    theme(legend.position="none")
-
-  cowplot::plot_grid(A, B, labels = NULL)
+    theme(legend.position="none") +
+    guides(fill = guide_legend(byrow = TRUE)) +
+    geom_ysidedensity(aes(fill=period), alpha = .5) +
+    geom_ysidehline(yintercept = 1.6, linetype=2, color="darkgreen", linewidth=1) +
+    theme(
+      ggside.panel.border = element_blank(),
+      ggside.panel.grid = element_blank(),
+      ggside.panel.background = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks = element_blank(),
+      ggside.panel.scale = .2) +
+    guides(color = "none", fill = "none")
 }
