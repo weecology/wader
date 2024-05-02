@@ -41,6 +41,7 @@ foraging_analysis <- function(path = get_default_data_path(),
     geom_ysidedensity(aes(fill=period), alpha = .5) +
     geom_ysidehline(yintercept = 32, linetype=2, color="darkgreen", linewidth=1) +
     theme(
+      text = element_text(family = "AppleGothic", size = 15),
       ggside.panel.border = element_blank(),
       ggside.panel.grid = element_blank(),
       ggside.panel.background = element_blank(),
@@ -93,6 +94,7 @@ initiation <- initiation_indicator(minyear = 2004) %>%
     geom_ysidedensity(aes(fill=period), alpha = .5) +
     geom_ysidehline(yintercept = 2.5, linetype=2, color="darkgreen", linewidth=1) +
     theme(
+      text = element_text(family = "AppleGothic", size = 15),
       ggside.panel.border = element_blank(),
       ggside.panel.grid = element_blank(),
       ggside.panel.background = element_blank(),
@@ -145,6 +147,7 @@ library(ggside)
     geom_ysidedensity(aes(fill=period), alpha = .5) +
     geom_ysidehline(yintercept = .5, linetype=2, color="darkgreen", linewidth=1) +
     theme(
+      text = element_text(family = "AppleGothic", size = 15),
       ggside.panel.border = element_blank(),
       ggside.panel.grid = element_blank(),
       ggside.panel.background = element_blank(),
@@ -197,6 +200,7 @@ library(ggside)
     geom_ysidedensity(aes(fill=period), alpha = .5) +
     geom_ysidehline(yintercept = 1.6, linetype=2, color="darkgreen", linewidth=1) +
     theme(
+      text = element_text(family = "AppleGothic", size = 15),
       ggside.panel.border = element_blank(),
       ggside.panel.grid = element_blank(),
       ggside.panel.background = element_blank(),
