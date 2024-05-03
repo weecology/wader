@@ -292,10 +292,11 @@ plot_initiation <- function(path = get_default_data_path(),
     dplyr::arrange(.data$year) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(color = dplyr::case_when(.data$date_score<1.5 ~ "red4",
-                                           dplyr::between(.data$date_score,1.5,2.5) ~ "orange",
-                                           .data$date_score>2.5 ~ "darkgreen")) %>%
+                                           dplyr::between(.data$date_score,1.5,4.5) ~ "orange",
+                                           .data$date_score>4.5 ~ "darkgreen")) %>%
 
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$date_score, color=.data$color)) +
+    ggplot2::geom_hline(yintercept=4.5, linetype=2, color="darkgreen", linewidth=.5) +
     ggplot2::geom_hline(yintercept=2.5, linetype=2, color="orange", linewidth=.5) +
     ggplot2::geom_hline(yintercept=1.5, linetype=2, color="red4", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3, shape=15) +

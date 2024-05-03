@@ -21,7 +21,7 @@ foraging_analysis <- function(path = get_default_data_path(),
                                 download_if_missing = TRUE)
 {
   library(ggplot2)
-  library(ggside)
+#  library(ggside)
   foraging <- foraging_indicator(minyear = 2004) %>%
     dplyr::mutate(period="baseline") %>%
     dplyr::mutate(period = replace(period, year > 2016, "current"))
@@ -38,16 +38,17 @@ foraging_analysis <- function(path = get_default_data_path(),
     theme_classic() +
     theme(legend.position="none") +
     guides(fill = guide_legend(byrow = TRUE)) +
-    geom_ysidedensity(aes(fill=period), alpha = .5) +
-    geom_ysidehline(yintercept = 32, linetype=2, color="darkgreen", linewidth=1) +
+    # geom_ysidedensity(aes(fill=period), alpha = .5) +
+    # geom_ysidehline(yintercept = 32, linetype=2, color="darkgreen", linewidth=1) +
     theme(
-      text = element_text(family = "AppleGothic", size = 15),
-      ggside.panel.border = element_blank(),
-      ggside.panel.grid = element_blank(),
-      ggside.panel.background = element_blank(),
-      ggside.axis.text = element_blank(),
-      ggside.axis.ticks = element_blank(),
-      ggside.panel.scale = .2) +
+      text = element_text(family = "AppleGothic", size = 18),
+      # ggside.panel.border = element_blank(),
+      # ggside.panel.grid = element_blank(),
+      # ggside.panel.background = element_blank(),
+      # ggside.axis.text = element_blank(),
+      # ggside.axis.ticks = element_blank(),
+      # ggside.panel.scale = .2,
+      axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
     guides(color = "none", fill = "none")
 }
 
@@ -74,7 +75,7 @@ initiation_analysis <- function(path = get_default_data_path(),
                                  download_if_missing = TRUE)
 {
 library(ggplot2)
-library(ggside)
+# library(ggside)
 initiation <- initiation_indicator(minyear = 2004) %>%
               dplyr::mutate(period="baseline") %>%
               dplyr::mutate(period = replace(period, year > 2016, "current"))
@@ -85,22 +86,23 @@ initiation <- initiation_indicator(minyear = 2004) %>%
   geom_line(color="black", linewidth=1.1) +
   geom_ribbon(alpha=0.2, fill="grey") +
   geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-  geom_hline(yintercept=2.5, linetype=2, color="darkgreen", linewidth=1) +
+  geom_hline(yintercept=4.5, linetype=2, color="darkgreen", linewidth=1) +
   scale_y_reverse(limits=c(5,-.2), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
   labs(x="Year", y = "Date Score") +
   theme_classic() +
   theme(legend.position="none") +
-    guides(fill = guide_legend(byrow = TRUE)) +
-    geom_ysidedensity(aes(fill=period), alpha = .5) +
-    geom_ysidehline(yintercept = 2.5, linetype=2, color="darkgreen", linewidth=1) +
+  guides(fill = guide_legend(byrow = TRUE)) +
+  # geom_ysidedensity(aes(fill=period), alpha = .5) +
+  # geom_ysidehline(yintercept = 4.5, linetype=2, color="darkgreen", linewidth=1) +
     theme(
-      text = element_text(family = "AppleGothic", size = 15),
-      ggside.panel.border = element_blank(),
-      ggside.panel.grid = element_blank(),
-      ggside.panel.background = element_blank(),
-      ggside.axis.text = element_blank(),
-      ggside.axis.ticks = element_blank(),
-      ggside.panel.scale = .2) +
+      text = element_text(family = "AppleGothic", size = 18),
+      # ggside.panel.border = element_blank(),
+      # ggside.panel.grid = element_blank(),
+      # ggside.panel.background = element_blank(),
+      # ggside.axis.text = element_blank(),
+      # ggside.axis.ticks = element_blank(),
+      # ggside.panel.scale = .2,
+      axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
     guides(color = "none", fill = "none")
 }
 
@@ -127,7 +129,7 @@ coastal_analysis <- function(path = get_default_data_path(),
                                 download_if_missing = TRUE)
 {
 library(ggplot2)
-library(ggside)
+# library(ggside)
   coastal <- coastal_indicator(minyear = 2004) %>%
     dplyr::mutate(period="historic") %>%
     dplyr::mutate(period = replace(period, year > 2016, "modern"))
@@ -144,16 +146,17 @@ library(ggside)
     theme_classic() +
     theme(legend.position="none") +
     guides(fill = guide_legend(byrow = TRUE)) +
-    geom_ysidedensity(aes(fill=period), alpha = .5) +
-    geom_ysidehline(yintercept = .5, linetype=2, color="darkgreen", linewidth=1) +
+    # geom_ysidedensity(aes(fill=period), alpha = .5) +
+    # geom_ysidehline(yintercept = .5, linetype=2, color="darkgreen", linewidth=1) +
     theme(
-      text = element_text(family = "AppleGothic", size = 15),
-      ggside.panel.border = element_blank(),
-      ggside.panel.grid = element_blank(),
-      ggside.panel.background = element_blank(),
-      ggside.axis.text = element_blank(),
-      ggside.axis.ticks = element_blank(),
-      ggside.panel.scale = .2) +
+      text = element_text(family = "AppleGothic", size = 18),
+      # ggside.panel.border = element_blank(),
+      # ggside.panel.grid = element_blank(),
+      # ggside.panel.background = element_blank(),
+      # ggside.axis.text = element_blank(),
+      # ggside.axis.ticks = element_blank(),
+      # ggside.panel.scale = .2,
+      axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
     guides(color = "none", fill = "none")
 }
 
@@ -180,7 +183,7 @@ supercolony_analysis <- function(path = get_default_data_path(),
                              download_if_missing = TRUE)
 {
 library(ggplot2)
-library(ggside)
+# library(ggside)
   supercolony <- supercolony_indicator(minyear = 2004) %>%
     dplyr::mutate(period="historic") %>%
     dplyr::mutate(period = replace(period, year > 2016, "modern"))
@@ -197,15 +200,22 @@ library(ggside)
     theme_classic() +
     theme(legend.position="none") +
     guides(fill = guide_legend(byrow = TRUE)) +
-    geom_ysidedensity(aes(fill=period), alpha = .5) +
-    geom_ysidehline(yintercept = 1.6, linetype=2, color="darkgreen", linewidth=1) +
+    # geom_ysidedensity(aes(fill=period), alpha = .5) +
+    # geom_ysidehline(yintercept = 1.6, linetype=2, color="darkgreen", linewidth=1) +
     theme(
-      text = element_text(family = "AppleGothic", size = 15),
-      ggside.panel.border = element_blank(),
-      ggside.panel.grid = element_blank(),
-      ggside.panel.background = element_blank(),
-      ggside.axis.text = element_blank(),
-      ggside.axis.ticks = element_blank(),
-      ggside.panel.scale = .2) +
+      text = element_text(family = "AppleGothic", size = 18),
+      # ggside.panel.border = element_blank(),
+      # ggside.panel.grid = element_blank(),
+      # ggside.panel.background = element_blank(),
+      # ggside.axis.text = element_blank(),
+      # ggside.axis.ticks = element_blank(),
+      # ggside.panel.scale = .2,
+      axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
     guides(color = "none", fill = "none")
 }
+
+# a=foraging_analysis()
+# b=initiation_analysis()
+# c=coastal_analysis()
+# d=supercolony_analysis()
+# cowplot::plot_grid(a,b,c,d, labels = NULL)
