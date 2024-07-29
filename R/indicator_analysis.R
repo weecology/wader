@@ -32,7 +32,7 @@ foraging_analysis <- function(path = get_default_data_path(),
     geom_line(color="black", linewidth=1.1) +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-    geom_hline(yintercept=32, linetype=2, color="darkgreen", linewidth=1) +
+    geom_hline(yintercept=32, linetype=2, color="black", linewidth=1) +
     ylim(0,35) +
     labs(x="Year", y = "tactile/visual") +
     theme_classic() +
@@ -40,6 +40,8 @@ foraging_analysis <- function(path = get_default_data_path(),
     guides(fill = guide_legend(byrow = TRUE)) +
     # geom_ysidedensity(aes(fill=period), alpha = .5) +
     # geom_ysidehline(yintercept = 32, linetype=2, color="darkgreen", linewidth=1) +
+    scale_color_grey() +
+    scale_fill_grey() +
     theme(
       text = element_text(family = "AppleGothic", size = 18),
       # ggside.panel.border = element_blank(),
@@ -86,7 +88,7 @@ initiation <- initiation_indicator(minyear = 2004) %>%
   geom_line(color="black", linewidth=1.1) +
   geom_ribbon(alpha=0.2, fill="grey") +
   geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-  geom_hline(yintercept=4.5, linetype=2, color="darkgreen", linewidth=1) +
+  geom_hline(yintercept=4.5, linetype=2, color="black", linewidth=1) +
   scale_y_reverse(limits=c(5,-.2), breaks=c(4,3,2,1,0),labels=c("December","January","February","March","April")) +
   labs(x="Year", y = "Date Score") +
   theme_classic() +
@@ -94,7 +96,9 @@ initiation <- initiation_indicator(minyear = 2004) %>%
   guides(fill = guide_legend(byrow = TRUE)) +
   # geom_ysidedensity(aes(fill=period), alpha = .5) +
   # geom_ysidehline(yintercept = 4.5, linetype=2, color="darkgreen", linewidth=1) +
-    theme(
+  scale_color_grey() +
+  scale_fill_grey() +
+  theme(
       text = element_text(family = "AppleGothic", size = 18),
       # ggside.panel.border = element_blank(),
       # ggside.panel.grid = element_blank(),
@@ -140,7 +144,7 @@ library(ggplot2)
     geom_line(color="black", linewidth=1.1) +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-    geom_hline(yintercept=.5, linetype=2, color="darkgreen", linewidth=1) +
+    geom_hline(yintercept=.5, linetype=2, color="black", linewidth=1) +
     ylim(0,.6) +
     labs(x="Year", y = "proportion coastal") +
     theme_classic() +
@@ -148,6 +152,8 @@ library(ggplot2)
     guides(fill = guide_legend(byrow = TRUE)) +
     # geom_ysidedensity(aes(fill=period), alpha = .5) +
     # geom_ysidehline(yintercept = .5, linetype=2, color="darkgreen", linewidth=1) +
+    scale_color_grey() +
+    scale_fill_grey() +
     theme(
       text = element_text(family = "AppleGothic", size = 18),
       # ggside.panel.border = element_blank(),
@@ -194,7 +200,7 @@ library(ggplot2)
     geom_line(color="black", linewidth=1.1) +
     geom_ribbon(alpha=0.2, fill="grey") +
     geom_ribbon(alpha=0.5, aes(color=NULL, fill=period)) +
-    geom_hline(yintercept=1.6, linetype=2, color="darkgreen", linewidth=1) +
+    geom_hline(yintercept=1.6, linetype=2, color="black", linewidth=1) +
     ylim(0,3) +
     labs(x="Year", y = "mean interval") +
     theme_classic() +
@@ -202,6 +208,8 @@ library(ggplot2)
     guides(fill = guide_legend(byrow = TRUE)) +
     # geom_ysidedensity(aes(fill=period), alpha = .5) +
     # geom_ysidehline(yintercept = 1.6, linetype=2, color="darkgreen", linewidth=1) +
+    scale_color_grey() +
+    scale_fill_grey() +
     theme(
       text = element_text(family = "AppleGothic", size = 18),
       # ggside.panel.border = element_blank(),
