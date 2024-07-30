@@ -38,14 +38,15 @@ max_counts <- function(path = get_default_data_path(),
   if(level == "subregion") {
     colony_table <- load_datafile("SiteandMethods/colonies.csv") %>% dplyr::select(-c("latitude","longitude"))
     out <- colonies %>%
-      dplyr::left_join(colony_table, by = dplyr::join_by(.data$group_id, .data$colony)) %>%
-      dplyr::group_by(.data$year, .data$subregion, .data$species) %>%
-      dplyr::summarise(count = sum(.data$count)) %>%
-      dplyr::filter(.data$subregion %in% c("2a","2b", "3an", "3as", "3ase", "3b")) %>%
+      dplyr::left_join(colony_table, by = dplyr::join_by(colony)) %>%
+      dplyr::group_by(year, subregion, species) %>%
+      dplyr::summarise(count = sum(count)) %>%
+      dplyr::filter(subregion %in% c("2a","2b", "3an", "3as", "3ase", "3b")) %>%
+      dplyr::rename(subregion, region = subregion) %>%
       dplyr::bind_rows(regions) %>%
-      dplyr::filter(.data$region %in% c("1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
+      dplyr::filter(region %in% c("1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
       dplyr::select("year", "region", "species", "count") %>%
-      dplyr::arrange(.data$region, .data$species, .data$year)
+      dplyr::arrange(region, species, year)
   }
 
   if(level == "region") {
