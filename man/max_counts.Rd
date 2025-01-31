@@ -7,7 +7,7 @@
 max_counts(
   path = get_default_data_path(),
   minyear = 1986,
-  maxyear = format(Sys.Date(), "\%Y"),
+  maxyear = as.numeric(format(Sys.Date(), "\%Y")),
   level = "colony"
 )
 }

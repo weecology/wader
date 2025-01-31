@@ -14,7 +14,7 @@
 #' @export
 #'
 max_counts <- function(path = get_default_data_path(),
-                                minyear = 1986, maxyear = format(Sys.Date(), "%Y"),
+                                minyear = 1986, maxyear = as.numeric(format(Sys.Date(), "%Y")),
                                 level = "colony")
 {
  level <- tolower(level)
@@ -22,7 +22,8 @@ max_counts <- function(path = get_default_data_path(),
  minyear <- as.integer(minyear); maxyear <- as.integer(maxyear)
 
    colonies <- load_datafile("Counts/maxcounts.csv") %>%
-     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
+     dplyr::filter(dplyr::between(.data$year, minyear, maxyear),
+                   !(notes %in% c("presence", "present and nesting but numbers unknown"))) %>%
      dplyr::group_by(.data$year, .data$colony, .data$species) %>%
      dplyr::summarise(count = max(.data$count)) %>%
      dplyr::select("year", "colony", "species", "count") %>%
