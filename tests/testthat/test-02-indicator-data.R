@@ -20,7 +20,8 @@ test_that("all max count data.frame has correct column names", {
 
 test_that("initiation data.frame has correct column names", {
   initiation <- data_tables$stork_initiation
-  expect_true(all(colnames(initiation)==c("year","initiation","date_score","days_past_nov_1")))
+  expect_true(all(colnames(initiation)==
+                    c("year","initiation","date_score","days_past_nov_1","region","colony","notes")))
 })
 
 test_that("species data.frame has correct column names", {

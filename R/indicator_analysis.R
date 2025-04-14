@@ -20,8 +20,8 @@ foraging_analysis <- function(path = get_default_data_path(),
                                 window = 3,
                                 download_if_missing = TRUE)
 {
-  library(ggplot2)
-#  library(ggside)
+requireNamespace(ggplot2)
+#  requireNamespace(ggside)
   foraging <- foraging_indicator(minyear = 2004) %>%
     dplyr::mutate(period="baseline") %>%
     dplyr::mutate(period = replace(period, year > 2016, "current"))
