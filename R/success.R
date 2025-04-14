@@ -6,7 +6,7 @@
 #'
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
-#'
+#' @inheritParams load_datafile
 #'
 #' @return a data.frame
 #'

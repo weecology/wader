@@ -30,5 +30,5 @@ a data.frame
 }
 \description{
 Create a table of rolling averages for the proportion of coastal nesters,
-by year, and plot with thresholds
+by year, and plot with target value
 }
