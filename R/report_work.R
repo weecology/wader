@@ -205,7 +205,7 @@ plot_foraging <- function(path = get_default_data_path(),
                                window = 3,
                                download_if_missing = TRUE)
 {
-
+  ylab <- ifelse(window > 1, "mean tactile/visual", "tactile/visual")
   foraging_indicator(path = path,
                      window = window,
                      download_if_missing = download_if_missing) %>%
@@ -215,7 +215,7 @@ plot_foraging <- function(path = get_default_data_path(),
     ggplot2::geom_hline(yintercept=32, linetype=2, color="black", linewidth=.5) +
                   ggplot2::geom_point(alpha=2, size=3) +
                   ggplot2::theme_bw() +
-                  ggplot2::ylab("tactile/visual")
+                  ggplot2::ylab(ylab)
   }
 
 #' @name plot_coastal
@@ -240,6 +240,8 @@ plot_coastal <- function(path = get_default_data_path(),
                           window = 3,
                           download_if_missing = TRUE)
 {
+  ylab <- ifelse(window > 1, "Mean proportion nests in coastal colonies",
+                 "Proportion nests in coastal colonies")
   coastal_indicator(path = path,
                      window = window,
                      download_if_missing = download_if_missing) %>%
@@ -249,7 +251,7 @@ plot_coastal <- function(path = get_default_data_path(),
     ggplot2::geom_hline(yintercept=.5, linetype=2, color="black", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::theme_bw() +
-    ggplot2::ylab("Average proportion nests in coastal colonies")
+    ggplot2::ylab(ylab)
 }
 
 #' @name plot_initiation
@@ -274,6 +276,7 @@ plot_initiation <- function(path = get_default_data_path(),
                          window = 3,
                          download_if_missing = TRUE)
 {
+  ylab <- ifelse(window > 1, "Mean Initiation Date", "Initiation Date")
   load_datafile("Indicators/stork_initiation.csv",
                 download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
@@ -287,7 +290,7 @@ plot_initiation <- function(path = get_default_data_path(),
     ggplot2::theme_bw() +
     ggplot2::theme(panel.border = ggplot2::element_blank()) +
     ggplot2::xlab("Year") +
-    ggplot2::ylab("Initiation Date")
+    ggplot2::ylab(ylab)
 
 }
 
@@ -313,6 +316,7 @@ plot_supercolony <- function(path = get_default_data_path(),
                             window = 3,
                             download_if_missing = TRUE)
 {
+  ylab <- ifelse(window > 1, "Ibis supercolony mean interval", "Ibis supercolony interval")
   supercolony_indicator(path = path,
                       window = window,
                       download_if_missing = download_if_missing) %>%
@@ -323,7 +327,7 @@ plot_supercolony <- function(path = get_default_data_path(),
     ggplot2::geom_hline(yintercept=1.6, linetype=2, color="black", linewidth=.5) +
     ggplot2::geom_point(alpha=2, size=3) +
     ggplot2::theme_bw() +
-    ggplot2::ylab("Ibis supercolony mean interval")
+    ggplot2::ylab(ylab)
 }
 
 #' @name max_count_plot
@@ -348,6 +352,7 @@ max_count_plot <- function(path = get_default_data_path(),
                                 window = 3,
                                 download_if_missing = TRUE)
 {
+  ylab <- ifelse(window > 1, "Number of nesting pairs (running ave)", "Number of nesting pairs")
 
   load_datafile("Indicators/max_count_all.csv",
                 download_if_missing = download_if_missing) %>%
@@ -368,7 +373,7 @@ max_count_plot <- function(path = get_default_data_path(),
     ggplot2::geom_line(linewidth=1.05) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position="bottom") +
-    ggplot2::ylab("Number of nesting pairs (3-yr running ave)")
+    ggplot2::ylab(ylab)
 
     # for report table
     # dplyr::select(-count) %>%
