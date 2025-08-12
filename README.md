@@ -1,6 +1,8 @@
 # wader
 [![R-CMD-check](https://github.com/weecology/wader/workflows/R-CMD-check/badge.svg)](https://github.com/weecology/wader/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/wader/main/LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1429290.svg)](https://doi.org/10.5281/zenodo.16814009)
+[![NSF-1929730](https://img.shields.io/badge/NSF-2326954-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2326954)
 ## Overview
 
 The **wader** package provides functions to retrieve and
