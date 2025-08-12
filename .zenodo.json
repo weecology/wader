@@ -1,0 +1,29 @@
+{
+"title": "Retrieve and summarize the Everglades Wading Bird Project data",
+"creators": [
+    {
+      "affiliation": "University of Florida",
+      "name": "Glenda M. Yenni",
+      "orcid": "0000-0001-6969-1848"
+    },
+    {
+      "affiliation": "University of Florida",
+      "name": "Ethan P. White",
+      "orcid": "0000-0001-6728-7745"
+    },
+    {
+      "affiliation": "University of Florida",
+      "name": "S. K. Morgan Ernest",
+      "orcid": "0000-0002-6026-8530"
+    }
+],
+    "description": "The wader package provides functions to download and generate summaries for the count, nesting, indicator, and weather data from the Wading Bird Project. The Wading Bird Project is a long-term (and ongoing) monitoring site in the Everglades water conservation areas. The raw data files can be found at https://github.com/weecology/evergladeswadingbird.",
+    "keywords": [
+    "ecology",
+    "time-series",
+    "long-term"
+  ],
+    "access_right": "open",
+    "license": "mit-license",
+    "upload_type": "software"
+}
