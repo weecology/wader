@@ -1,6 +1,6 @@
 Package: wader
 Title: A Collection of Functions to Retrieve and Summarize the EvergladesWadingBird Data
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     c(person(given = c("Glenda", "M."),
              family = "Yenni",
