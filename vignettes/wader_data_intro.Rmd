@@ -35,6 +35,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(ggmap)
+library(ggtext)
 library(sf)
 ```
 
@@ -51,16 +52,32 @@ Note that we are downloading to the working directory. You can set a directory i
 
 The first thing we should do is look at the study site. We can plot the shapefiles to see the different water management subregions.
 
+Note: We're using Google maps as our source in the ggmap package. See the [ggmap documentation](https://rdrr.io/cran/ggmap/man/register_google.html) for how to set up your Google API key if you want to use this source.
+
 ```{r, warning = FALSE, message = FALSE}
 sp <- read_sf(file.path(get_default_data_path(),                      "EvergladesWadingBird/SiteandMethods/regions/subregions.shp"))
 sp <- st_transform(sp, st_crs("+proj=longlat +datum=WGS84"))
 location <- geocode(c("25.883878, -80.794257"), override_limit = TRUE) + c(-.1,.35)
+# Calculate centroids and add lon/lat columns
+    sp_centroids <- st_centroid(sp)
+    sp_centroids$lon <- st_coordinates(sp_centroids)[, "X"]
+    sp_centroids$lat <- st_coordinates(sp_centroids)[, "Y"]
+color_scheme <- c("1" = "red4", "2a" = "blue4", "2b" = "blue4", "3an" = "green4", "3as" = "green4", "3ase" = "green4", "3b" = "green4", "coastalenp" = "orange3", "inlandenp" = "orange3")
+
 ggmap(get_map(location = location, 
                zoom = 9, maptype = "terrain", source = "google")) +
   geom_sf(data = sp, aes(color=Name), inherit.aes = FALSE, linewidth = 1.1, alpha=0) +
-  labs(color='Subregion') +
+  geom_richtext(data = sp_centroids, 
+    aes(x = lon, y = lat, label = Name),
+    fill = "darkseagreen2",    
+    color = "black",   
+    label.color = "darkseagreen2",
+    label.padding = unit(0.01, "lines"),
+    size = 3.3) +
+scale_color_manual(values = color_scheme) +
   theme_bw() +
-  theme_void()
+  theme_void() +
+  theme(legend.position = "none")
 ```
 
 Next, we want to look at the wading bird colonies within these regions. The Water Conservation Areas are the regions we monitor, though we also provide data from other areas.
@@ -73,11 +90,9 @@ bbox <- make_bbox(longitude, latitude, colonies)
 ggmap(get_map(location = bbox, 
                zoom = 10, maptype = "terrain", source = "google")) +
  geom_point(data = colonies, 
-                     aes(x = longitude, y = latitude, colour = subregion), size=.9) +
- geom_text(data = colonies, aes(x = longitude, y = latitude, label =  colony), size=1.2, hjust=0, vjust=0) +
- theme_bw() +
+                     aes(x = longitude, y = latitude, colour = subregion), size=1.2) + scale_color_manual(values = color_scheme) +
  theme_void() +
- labs(color='Subregion')
+ theme(legend.position = "none")
 ```
 Next we'll look at Water Conservation Area 3.
 
@@ -88,11 +103,10 @@ bbox <- make_bbox(longitude, latitude, colonies)
 ggmap(get_map(location = bbox, 
                zoom = 10, maptype = "terrain", source = "google")) +
  geom_point(data = colonies, 
-                     aes(x = longitude, y = latitude, colour = subregion), size=.9) +
- geom_text(data = colonies, aes(x = longitude, y = latitude, label =  colony), size=1.2, hjust=0, vjust=0) +
- theme_bw() +
+                     aes(x = longitude, y = latitude, colour = subregion), size=1.2) +
+ scale_color_manual(values = color_scheme) +
  theme_void() +
- labs(color='Subregion')
+ theme(legend.position = "none")
 ```
 # The Data
 
