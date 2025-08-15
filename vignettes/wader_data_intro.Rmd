@@ -78,22 +78,37 @@ scale_color_manual(values = color_scheme) +
   theme_bw() +
   theme_void() +
   theme(legend.position = "none")
+  
 ```
 
-Next, we want to look at the wading bird colonies within these regions. The Water Conservation Areas are the regions we monitor, though we also provide data from other areas. Let's look at colony locations in the Water Conservation Areas.
+Next, we want to look at the wading bird colonies within these regions. The Water Conservation Areas are the regions we monitor, though we also provide data from other areas. 
+
+Let's look at Water Conservation Areas 1 (Loxahatchee) and 2.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 colonies <- load_datafile("SiteandMethods/colonies.csv") %>%
-  filter(region %in% c("1","2","3"))
-
-sp <- sp %>% filter(Name %in% c("1", "2a", "2b", "3an", "3as", "3ase", "3b"))
-
-ggplot(data = sp) +
-      geom_sf(aes(color = Name), linewidth = 1.1, fill = "darkseagreen2") +
-  geom_point(data = colonies, 
+  filter(region %in% c("1","2"))
+bbox <- make_bbox(longitude, latitude, colonies)
+ggmap(get_map(location = bbox, 
+               zoom = 10, maptype = "terrain", source = "google")) +
+ geom_point(data = colonies, 
                      aes(x = longitude, y = latitude, colour = subregion), size=1.2) +
-  scale_color_manual(values = color_scheme) +
-   theme_void() +
+ scale_color_manual(values = color_scheme) +
+ theme_void() +
+ theme(legend.position = "none")
+```
+Next we'll look at Water Conservation Area 3.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+colonies <- load_datafile("SiteandMethods/colonies.csv") %>%
+  filter(region == "3")
+bbox <- make_bbox(longitude, latitude, colonies)
+ggmap(get_map(location = bbox, 
+               zoom = 10, maptype = "terrain", source = "google")) +
+ geom_point(data = colonies, 
+                     aes(x = longitude, y = latitude, colour = subregion), size=1.2) +
+ scale_color_manual(values = color_scheme) +
+ theme_void() +
  theme(legend.position = "none")
 ```
 
