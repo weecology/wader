@@ -1,0 +1,179 @@
+---
+title: "Introduction to the wader data"
+author: "Glenda M. Yenni"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to the wader data}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include = FALSE}
+# check if we're running this as part of R CMD CHECK and skip if so
+is_check <- ("CheckExEnv" %in% search()) || any(c("_R_CHECK_TIMINGS_",
+             "_R_CHECK_LICENSE_") %in% names(Sys.getenv()))
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = !is_check
+)
+```
+
+# Introduction
+
+The `wader` package is designed to help you use the [Everglades Wading Bird data](https://github.com/weecology/EvergladesWadingBird).
+
+## Installing the Package
+
+First, we need to install the `wader` package if we haven't done so already. We'll also load some `tidyverse` packages and some spatial packages.
+
+```{r, warning = FALSE, message = FALSE}
+#devtools::install_github("weecology/wader")
+library(wader)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggmap)
+library(ggtext)
+library(sf)
+```
+
+Next, we need to download the data.
+
+```{r, warning = FALSE, message = FALSE}
+download_observations(".")
+```
+Note that we are downloading to the working directory. You can set a directory in your R environment, then use `get_default_data_path()` anytime you need to specify a path to your wader data. Otherwise, most functions will assume you are in the wader data directory by default.
+
+<br/>
+
+# The Study Site
+
+The first thing we should do is look at the study site. We can plot the shapefiles to see the different water management subregions.
+
+Note: We're using Google maps as our source in the ggmap package. See the [ggmap documentation](https://rdrr.io/cran/ggmap/man/register_google.html) for how to set up your Google API key if you want to use this source.
+
+```{r, warning = FALSE, message = FALSE}
+sp <- read_sf(file.path(get_default_data_path(),                      "EvergladesWadingBird/SiteandMethods/regions/subregions.shp"))
+sp <- st_transform(sp, st_crs("+proj=longlat +datum=WGS84"))
+location <- geocode(c("25.883878, -80.794257"), override_limit = TRUE) + c(-.1,.35)
+# Calculate centroids and add lon/lat columns
+    sp_centroids <- st_centroid(sp)
+    sp_centroids$lon <- st_coordinates(sp_centroids)[, "X"]
+    sp_centroids$lat <- st_coordinates(sp_centroids)[, "Y"]
+color_scheme <- c("1" = "red4", "2a" = "blue4", "2b" = "blue4", "3an" = "green4", "3as" = "green4", "3ase" = "green4", "3b" = "green4", "coastalenp" = "orange3", "inlandenp" = "orange3")
+
+ggmap(get_map(location = location, 
+               zoom = 9, maptype = "terrain", source = "google")) +
+  geom_sf(data = sp, aes(color=Name), inherit.aes = FALSE, linewidth = 1.1, alpha=0) +
+  geom_richtext(data = sp_centroids, 
+    aes(x = lon, y = lat, label = Name),
+    fill = "darkseagreen2",    
+    color = "black",   
+    label.color = "darkseagreen2",
+    label.padding = unit(0.01, "lines"),
+    size = 3.3) +
+scale_color_manual(values = color_scheme) +
+  theme_bw() +
+  theme_void() +
+  theme(legend.position = "none")
+  
+```
+
+Next, we want to look at the wading bird colonies within these regions. The Water Conservation Areas are the regions we monitor, though we also provide data from other areas. 
+
+Let's look at Water Conservation Areas 1 (Loxahatchee) and 2.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+colonies <- load_datafile("SiteandMethods/colonies.csv") %>%
+  filter(region %in% c("1","2"))
+bbox <- make_bbox(longitude, latitude, colonies)
+ggmap(get_map(location = bbox, 
+               zoom = 10, maptype = "terrain", source = "google")) +
+ geom_point(data = colonies, 
+                     aes(x = longitude, y = latitude, colour = subregion), size=1.2) +
+ scale_color_manual(values = color_scheme) +
+ theme_void() +
+ theme(legend.position = "none")
+```
+Next we'll look at Water Conservation Area 3.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+colonies <- load_datafile("SiteandMethods/colonies.csv") %>%
+  filter(region == "3")
+bbox <- make_bbox(longitude, latitude, colonies)
+ggmap(get_map(location = bbox, 
+               zoom = 10, maptype = "terrain", source = "google")) +
+ geom_point(data = colonies, 
+                     aes(x = longitude, y = latitude, colour = subregion), size=1.2) +
+ scale_color_manual(values = color_scheme) +
+ theme_void() +
+ theme(legend.position = "none")
+```
+
+# The Data
+
+Now that we're familiar with the area, we can start looking at the data.
+
+## Count Data
+
+The most consistent data we have are the annual max counts. You can get these at the species level using the `max_counts` function. We'll look at one of our major species, Great Egrets, in the Water Conservation Areas. You can also use `minyear` and `maxyear` to specify the time period you want, but we'll just look at all years. 
+
+```{r, warning = FALSE, message = FALSE}
+max_counts(level="region") %>%
+  filter(species == "greg", region == "wcas") %>%
+ggplot() +
+  geom_line(aes(x=year, y=count), color="steelblue", linewidth=1.05) +
+  theme_bw() +
+  theme(legend.position="none") +
+  ylab("max count")
+```
+In `max_counts`, we can specify the level to which we want the data summarized. For example, we can get the data at the subregion level. Then we can just look at the time series in Subregion 3ase.
+
+```{r, warning = FALSE, message = FALSE}
+max_counts(level="subregion") %>%
+  filter(species == "greg", region == "3ase") %>%
+ggplot() +
+  geom_line(aes(x=year, y=count), color="steelblue", linewidth=1.05) +
+  theme_bw() +
+  theme(legend.position="none") +
+  ylab("max count")
+```
+Note that changing the `level` argument changes what is provided in the `region` column, the columns names don't change.
+
+And we can also get the data at the colony level. Let's look at one of our largest colonies in 3ase, 6th Bridge.
+
+```{r, warning = FALSE, message = FALSE}
+max_counts(level="colony") %>%
+  filter(species == "greg", colony == "6th_bridge") %>%
+ggplot() +
+  geom_line(aes(x=year, y=count), color="steelblue", linewidth=1.05) +
+  theme_bw() +
+  theme(legend.position="none") +
+  ylab("max count")
+```
+
+## Nest Data
+
+We also have nest check data from the field, which we use to calculate nest success at the species level, and the colony and region levels. Let's look at Great Egrets at 6th Bridge again. 
+
+```{r, warning = FALSE, message = FALSE}
+load_datafile("Nesting/nest_success_summary.csv") %>%
+  filter(species == "greg", colony == "6th_bridge") %>%
+ggplot() +
+  geom_line(aes(x=year, y=overall_p), color="steelblue", linewidth=1.05) +
+  theme_bw() +
+  theme(legend.position="none") +
+  ylab("nest success (p)")
+```
+
+## Indicator Data
+
+To monitor the status of wading birds in the Everglades over the years, we use several metrics, called Indicators. Each indicator has a function in `wader` to retrieve the time series of values, and a function to plot it. Let's look at the coastal indicator, which is the ratio of birds nesting in coastal colonies relative to the total. The dotted line is the target value.
+
+```{r, warning = FALSE, message = FALSE}
+plot_coastal(window=1)
+```
+
+There are similar functions for the supercolony, foraging ratio, and Wood Stork nest initiation date indicators, as well as max count, which is itself an indicator.
