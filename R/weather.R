@@ -144,7 +144,7 @@ data = tolower(data)
 #'
 #' @description Create a plot of water gauge data
 #'
-#' @param path Depth data location
+#' @param depths Depth data .csv file
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @param wca wca to plot
@@ -155,14 +155,13 @@ data = tolower(data)
 #'
 #' @export
 #'
-water_report <- function(path = get_default_data_path(),
+water_report <- function(depths,
                        minyear = as.integer(format(Sys.Date(), "%Y"))-3,
                        maxyear = as.integer(format(Sys.Date(), "%Y")),
                        wca = "1",
                        download_if_missing = TRUE)
 {
-  depths <- load_datafile("Water/eden_depth.csv",
-                          download_if_missing = download_if_missing, path = path) %>%
+  depths <- depths %>%
             dplyr::mutate(date=as.Date(.data$date))
   monthly_means <- depths %>%
                    dplyr::mutate(month=lubridate::month(.data$date)) %>%
