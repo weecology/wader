@@ -5,14 +5,14 @@
 \title{Calculate dry down rates from water gauge data}
 \usage{
 dry_down(
-  path = get_default_data_path(),
+  depths,
   minyear = as.integer(format(Sys.Date(), "\%Y")) - 6,
   maxyear = as.integer(format(Sys.Date(), "\%Y")),
   download_if_missing = TRUE
 )
 }
 \arguments{
-\item{path}{Depth data location}
+\item{depths}{Depth data .csv file}
 
 \item{minyear}{Earliest year to include}
 

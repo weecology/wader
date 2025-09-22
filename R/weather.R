@@ -205,7 +205,7 @@ water_report <- function(depths,
 #' calculate max difference relative to number of days. Also calculate exceedance, % of
 #' previous years with slower dry down rates.
 #'
-#' @param path Depth data location
+#' @param depths Depth data .csv file
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @inheritParams load_indicator_data
@@ -215,13 +215,12 @@ water_report <- function(depths,
 #'
 #' @export
 #'
-dry_down <- function(path = get_default_data_path(),
+dry_down <- function(depths,
                          minyear = as.integer(format(Sys.Date(), "%Y"))-6,
                          maxyear = as.integer(format(Sys.Date(), "%Y")),
                          download_if_missing = TRUE)
 {
-  depths <- load_datafile("Water/eden_depth.csv",
-                          download_if_missing = download_if_missing, path = path) %>%
+  depths <- depths %>%
     dplyr::mutate(date=as.Date(.data$date),
                   year=lubridate::year(.data$date),
                   month=lubridate::month(.data$date)) %>%
