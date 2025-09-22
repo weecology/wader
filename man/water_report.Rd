@@ -5,7 +5,7 @@
 \title{Plot water gauge data}
 \usage{
 water_report(
-  path = get_default_data_path(),
+  depths,
   minyear = as.integer(format(Sys.Date(), "\%Y")) - 3,
   maxyear = as.integer(format(Sys.Date(), "\%Y")),
   wca = "1",
@@ -13,7 +13,7 @@ water_report(
 )
 }
 \arguments{
-\item{path}{Depth data location}
+\item{depths}{Depth data .csv file}
 
 \item{minyear}{Earliest year to include}
 
