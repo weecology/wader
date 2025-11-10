@@ -21,8 +21,10 @@ max_count_indicator <- function(path = get_default_data_path(),
                                   download_if_missing = TRUE)
 {
 
-  load_datafile("Indicators/max_count_all.csv",
-                             download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/max_count_all.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
                dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
                dplyr::select(-"region") %>%
                dplyr::arrange(.data$species, .data$year) %>%
@@ -61,8 +63,10 @@ initiation_indicator <- function(path = get_default_data_path(),
                                 download_if_missing = TRUE)
 {
 
-  load_datafile("Indicators/stork_initiation.csv",
-                download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/stork_initiation.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::arrange(.data$year) %>%
     dplyr::mutate(date_score_mean = zoo::rollapply(.data$date_score, FUN="mean",
@@ -96,8 +100,10 @@ coastal_indicator <- function(path = get_default_data_path(),
                                 download_if_missing = TRUE)
 {
 
-  load_datafile("Indicators/coastal_nesting.csv",
-                download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/coastal_nesting.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::arrange(.data$year) %>%
     dplyr::mutate(proportion_mean = zoo::rollapply(.data$proportion, FUN="mean",
@@ -131,8 +137,10 @@ foraging_indicator <- function(path = get_default_data_path(),
                               download_if_missing = TRUE)
 {
 
-  load_datafile("Indicators/max_count_all.csv",
-                download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/max_count_all.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear),
                   .data$species %in% c("wost","whib","greg")) %>%
     dplyr::select(-"region") %>%
@@ -172,8 +180,10 @@ supercolony_indicator <- function(path = get_default_data_path(),
                                download_if_missing = TRUE)
 {
 
-  load_datafile("Indicators/supercolony_interval.csv",
-                download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/supercolony_interval.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::mutate(interval_mean = zoo::rollapply(.data$ibis_interval, FUN="mean",
                                                    width=window, align="right",
@@ -277,8 +287,10 @@ plot_initiation <- function(path = get_default_data_path(),
                          download_if_missing = TRUE)
 {
   ylab <- ifelse(window > 1, "Mean Initiation Date", "Initiation Date")
-  load_datafile("Indicators/stork_initiation.csv",
-                download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/stork_initiation.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::arrange(.data$year) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
@@ -354,8 +366,10 @@ max_count_plot <- function(path = get_default_data_path(),
 {
   ylab <- ifelse(window > 1, "Number of nesting pairs (running ave)", "Number of nesting pairs")
 
-  load_datafile("Indicators/max_count_all.csv",
-                download_if_missing = download_if_missing) %>%
+  load_datafile(
+    "Indicators/max_count_all.csv",
+    path = path,
+    download_if_missing = download_if_missing) %>%
     dplyr::filter(.data$species %in% c("greg","sneg","whib","wost")) %>%
     dplyr::filter(dplyr::between(.data$year, minyear, maxyear)) %>%
     dplyr::arrange(.data$species, .data$year) %>%
