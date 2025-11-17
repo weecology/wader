@@ -108,4 +108,23 @@ load_datafile <- function(datafile, na.strings = "", path = get_default_data_pat
   warning = function(w) w)
 }
 
-
+#' @name load_boundaries
+#'
+#' @title Load ecohydrological boundaries
+#'
+#' @param path path to regions shapefile
+#' @param level region level to load (all, wcas, or subregions)
+#'
+#' @export
+#'
+load_boundaries <- function(
+    path = file.path(
+      get_default_data_path(),
+      "EvergladesWadingBird",
+      "SiteandMethods/regions"
+    ),
+    level = "subregions") {
+  level <- tolower(level)
+  boundaries <- sf::st_read(file.path(path, paste(level, ".shp", sep = "")))
+  return(boundaries)
+}
