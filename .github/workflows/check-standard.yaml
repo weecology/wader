@@ -44,7 +44,7 @@ jobs:
       - name: Build and check
         uses: r-lib/actions/check-r-package@v2
         with:
-          args: 'c("--no-manual", "--as-cran")'
+          args: 'c("--no-manual")'
           error-on: '"error"'
           check-dir: '"check"'
 

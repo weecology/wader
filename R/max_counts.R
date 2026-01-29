@@ -23,7 +23,7 @@ max_counts <- function(path = get_default_data_path(),
 
    colonies <- load_datafile("Counts/maxcounts.csv", path = path) %>%
      dplyr::filter(dplyr::between(.data$year, minyear, maxyear),
-                   !(notes %in% c("presence", "present and nesting but numbers unknown"))) %>%
+                   !(.data$notes %in% c("presence", "present and nesting but numbers unknown"))) %>%
      dplyr::group_by(.data$year, .data$colony, .data$species) %>%
      dplyr::summarise(count = max(.data$count)) %>%
      dplyr::select("year", "colony", "species", "count") %>%
@@ -41,14 +41,14 @@ max_counts <- function(path = get_default_data_path(),
       dplyr::select(-c("latitude","longitude"))
     out <- colonies %>%
       dplyr::left_join(colony_table, by = dplyr::join_by(colony)) %>%
-      dplyr::group_by(year, subregion, species) %>%
-      dplyr::summarise(count = sum(count)) %>%
+      dplyr::group_by(.data$year, .data$subregion, .data$species) %>%
+      dplyr::summarise(count = sum(.data$count)) %>%
       dplyr::filter(subregion %in% c("2a","2b", "3an", "3as", "3ase", "3b")) %>%
       dplyr::rename(subregion, region = subregion) %>%
       dplyr::bind_rows(regions) %>%
-      dplyr::filter(region %in% c("1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
+      dplyr::filter(.data$region %in% c("1", "2a","2b", "3an", "3as", "3ase", "3b", "enp")) %>%
       dplyr::select("year", "region", "species", "count") %>%
-      dplyr::arrange(region, species, year)
+      dplyr::arrange(.data$region, .data$species, .data$year)
   }
 
   if(level == "region") {
