@@ -15,6 +15,7 @@ It contains a set of functions to download, clean, and summarize the data.
 
 Authors:
 \itemize{
+  \item Glenda M. Yenni \email{glenda@weecology.org} (\href{https://orcid.org/0000-0001-6969-1848}{ORCID})
   \item Ethan P. White \email{ethan@weecology.org} (\href{https://orcid.org/0000-0001-6728-7745}{ORCID})
 }
 

@@ -13,3 +13,5 @@
 ^.Renviron$
 ^_pkgdown\.yml$
 ^\.github$
+^\.positai$
+^\.claude$
