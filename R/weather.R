@@ -220,11 +220,11 @@ dry_down <- function(depths,
                          maxyear = as.integer(format(Sys.Date(), "%Y")),
                          download_if_missing = TRUE)
 {
-  depths <- depths %>%
+  depths2 <- depths %>%
     dplyr::mutate(date=as.Date(.data$date),
                   year=lubridate::year(.data$date),
                   month=lubridate::month(.data$date)) %>%
-    dplyr::select(-c(.data$depth_min,.data$depth_sd,.data$depth_mean)) %>%
+    dplyr::select(-c("depth_min","depth_sd","depth_mean","X")) %>%
     dplyr::mutate(depth_max=10*.data$depth_max) %>%
     dplyr::group_by(.data$year,.data$month,.data$region) %>%
     dplyr::slice(which.max(.data$depth_max)) %>%
