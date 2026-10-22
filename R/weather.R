@@ -167,8 +167,10 @@ water_report <- function(depths,
   monthly_means <- depths %>%
                    dplyr::mutate(month=lubridate::month(.data$date)) %>%
                    dplyr::group_by(.data$month, .data$region) %>%
-                   dplyr::summarise(min=mean(.data$depth_min), max=mean(.data$depth_max),
-                                    min_sd=sd(.data$depth_min), max_sd=sd(.data$depth_max),
+                   dplyr::summarise(min=mean(.data$depth_min, na.rm=TRUE),
+                                    max=mean(.data$depth_max, na.rm=TRUE),
+                                    min_sd=sd(.data$depth_min, na.rm=TRUE),
+                                    max_sd=sd(.data$depth_max, na.rm=TRUE),
                                     .groups = "drop_last")
 
   df_depths <- depths %>%
@@ -183,10 +185,10 @@ water_report <- function(depths,
     ggplot2::ggplot(data = df_depths)  +
     ggplot2::geom_ribbon(ggplot2::aes(x=.data$date, y=.data$min,
                                       ymin=.data$min_lower,
-                                      ymax=.data$min), fill="black", alpha=0.5) +
+                                      ymax=.data$min), fill="black", alpha=0.3) +
     ggplot2::geom_ribbon(ggplot2::aes(x=.data$date, y=.data$max,
                                       ymin=.data$max,
-                                      ymax=.data$max_upper), fill="black", alpha=0.5) +
+                                      ymax=.data$max_upper), fill="black", alpha=0.3) +
     ggplot2::geom_line(ggplot2::aes(x=.data$date, y=.data$depth_mean), color="red", linewidth = 1.4) +
     ggplot2::geom_ribbon(ggplot2::aes(x=.data$date, y=.data$depth_mean, ymin=.data$depth_min,
                                       ymax=.data$depth_max), fill="red", alpha=0.5) +
