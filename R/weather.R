@@ -148,7 +148,6 @@ data = tolower(data)
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
 #' @param wca wca to plot
-#' @inheritParams load_indicator_data
 #'
 #'
 #' @return a data.frame
@@ -158,39 +157,41 @@ data = tolower(data)
 water_report <- function(depths,
                        minyear = as.integer(format(Sys.Date(), "%Y"))-3,
                        maxyear = as.integer(format(Sys.Date(), "%Y")),
-                       wca = "1",
-                       download_if_missing = TRUE)
+                       wca = "1")
 {
   depths <- depths %>%
-            dplyr::mutate(date=as.Date(.data$date))
+            dplyr::select(-"X") %>%
+            dplyr::mutate(date=as.Date(.data$date),
+                          year=lubridate::year(.data$date),
+                          month=lubridate::month(.data$date),)
   monthly_means <- depths %>%
                    dplyr::mutate(month=lubridate::month(.data$date)) %>%
                    dplyr::group_by(.data$month, .data$region) %>%
                    dplyr::summarise(min=mean(.data$depth_min), max=mean(.data$depth_max),
-                                    min_sd=sd(.data$depth_min), max_sd=sd(.data$depth_max))
+                                    min_sd=sd(.data$depth_min), max_sd=sd(.data$depth_max),
+                                    .groups = "drop_last")
 
-   depths %>%
+  df_depths <- depths %>%
     dplyr::filter(.data$region==wca, dplyr::between(date,
-                                     as.Date(paste(minyear,'-01-01',sep="")),
-                                     as.Date(paste(maxyear,'-07-30',sep="")))) %>%
-    merge(monthly_means) %>%
-      dplyr::mutate(year=lubridate::year(.data$date)) %>%
-      dplyr::mutate(min=ifelse(date==as.Date(paste(.data$year,'-',.data$month,'-15',sep="")), min, NA),
-                    max=ifelse(date==as.Date(paste(.data$year,'-',.data$month,'-15',sep="")), max, NA),
-                    min_sd=ifelse(date==as.Date(paste(.data$year,'-',.data$month,'-15',sep="")),
-                                  .data$min-.data$min_sd, NA),
-                    max_sd=ifelse(date==as.Date(paste(.data$year,'-',.data$month,'-15',sep="")),
-                                  .data$max+.data$max_sd, NA)) %>%
-    ggplot2::ggplot()  +
+                                                    as.Date(paste(minyear,'-01-01',sep="")),
+                                                    as.Date(paste(maxyear,'-07-30',sep="")))) %>%
+    dplyr::left_join(monthly_means, by=c("region","month")) %>%
+    dplyr::mutate(min_lower = min - min_sd,
+                  max_upper = max + max_sd) %>%
+    dplyr::arrange(date)
+
+    ggplot2::ggplot(data = df_depths)  +
+    ggplot2::geom_ribbon(ggplot2::aes(x=.data$date, y=.data$min,
+                                      ymin=.data$min_lower,
+                                      ymax=.data$min), fill="black", alpha=0.5) +
+    ggplot2::geom_ribbon(ggplot2::aes(x=.data$date, y=.data$max,
+                                      ymin=.data$max,
+                                      ymax=.data$max_upper), fill="black", alpha=0.5) +
     ggplot2::geom_line(ggplot2::aes(x=.data$date, y=.data$depth_mean), color="red", linewidth = 1.4) +
     ggplot2::geom_ribbon(ggplot2::aes(x=.data$date, y=.data$depth_mean, ymin=.data$depth_min,
-                                      ymax=.data$depth_max, fill="red"), alpha=0.5) +
-    ggplot2::geom_point(ggplot2::aes(x=.data$date, y=.data$min), shape = 4, size = 3) +
-    ggplot2::geom_point(ggplot2::aes(x=.data$date, y=.data$max), shape = 3, size = 3) +
-    ggplot2::geom_point(ggplot2::aes(x=.data$date, y=.data$min_sd), shape = 4, size = 3) +
-    ggplot2::geom_point(ggplot2::aes(x=.data$date, y=.data$max_sd), shape = 3, size = 3) +
+                                      ymax=.data$depth_max), fill="red", alpha=0.5) +
     ggplot2::labs(x="Date", y="Stage (cm)") +
-    ggplot2::scale_x_date(date_labels="%b %y", date_breaks="4 months") +
+    ggplot2::scale_x_date(date_labels="%b %y", date_breaks="8 months") +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position = "none")
 
@@ -208,7 +209,6 @@ water_report <- function(depths,
 #' @param depths Depth data .csv file
 #' @param minyear Earliest year to include
 #' @param maxyear Most recent year to include
-#' @inheritParams load_indicator_data
 #'
 #'
 #' @return a data.frame
@@ -217,10 +217,9 @@ water_report <- function(depths,
 #'
 dry_down <- function(depths,
                          minyear = as.integer(format(Sys.Date(), "%Y"))-6,
-                         maxyear = as.integer(format(Sys.Date(), "%Y")),
-                         download_if_missing = TRUE)
+                         maxyear = as.integer(format(Sys.Date(), "%Y")))
 {
-  depths2 <- depths %>%
+  depths <- depths %>%
     dplyr::mutate(date=as.Date(.data$date),
                   year=lubridate::year(.data$date),
                   month=lubridate::month(.data$date)) %>%

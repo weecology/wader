@@ -7,8 +7,7 @@
 dry_down(
   depths,
   minyear = as.integer(format(Sys.Date(), "\%Y")) - 6,
-  maxyear = as.integer(format(Sys.Date(), "\%Y")),
-  download_if_missing = TRUE
+  maxyear = as.integer(format(Sys.Date(), "\%Y"))
 )
 }
 \arguments{
@@ -17,9 +16,6 @@ dry_down(
 \item{minyear}{Earliest year to include}
 
 \item{maxyear}{Most recent year to include}
-
-\item{download_if_missing}{if the specified file path doesn't have the
-EvergladesWadingBird folder, then download it}
 }
 \value{
 a data.frame

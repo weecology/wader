@@ -224,8 +224,8 @@ plot_foraging <- function(path = get_default_data_path(),
 
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$proportion_mean)) +
     ggplot2::geom_hline(yintercept=32, linetype=2, linewidth=.5) +
+    ggplot2::geom_point(ggplot2::aes(.data$year, .data$proportion), alpha=2, color="mediumblue") +
     ggplot2::geom_line(linewidth=1.05) +
-    ggplot2::geom_point(ggplot2::aes(.data$year, .data$proportion), alpha=2, size=3, color="mediumblue") +
       ggplot2::theme_bw() +
       ggplot2::ylab(ylab)
   }
@@ -260,8 +260,8 @@ plot_coastal <- function(path = get_default_data_path(),
 
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$proportion_mean)) +
     ggplot2::geom_hline(yintercept=.5, linetype=2, linewidth=.5) +
+    ggplot2::geom_point(ggplot2::aes(.data$year, .data$proportion),alpha=2, color="mediumblue") +
     ggplot2::geom_line(linewidth=1.05) +
-    ggplot2::geom_point(ggplot2::aes(.data$year, .data$proportion),alpha=2, size=3, color="mediumblue") +
     ggplot2::theme_bw() +
     ggplot2::ylab(ylab)
 }
@@ -296,8 +296,8 @@ plot_initiation <- function(path = get_default_data_path(),
 
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$date_score_mean)) +
     ggplot2::geom_hline(yintercept=4.5, linetype=2, linewidth=.5) +
+    ggplot2::geom_point(ggplot2::aes(.data$year, .data$date_score),alpha=2, shape=15, color="mediumblue") +
     ggplot2::geom_line(linewidth=1.05) +
-    ggplot2::geom_point(ggplot2::aes(.data$year, .data$date_score),alpha=2, size=3, shape=15, color="mediumblue") +
     ggplot2::scale_y_reverse(limits=c(5,1), breaks=c(5,4,3,2,1),
                              labels=c("November","December","January","February","March")) +
     ggplot2::theme_bw() +
@@ -338,8 +338,8 @@ plot_supercolony <- function(path = get_default_data_path(),
 
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$interval_mean)) +
     ggplot2::geom_hline(yintercept=1.6, linetype=2, linewidth=.5) +
+    ggplot2::geom_point(ggplot2::aes(.data$year, .data$ibis_interval),alpha=2, color="mediumblue") +
     ggplot2::geom_line(linewidth=1.05) +
-    ggplot2::geom_point(ggplot2::aes(.data$year, .data$ibis_interval),alpha=2, size=3, color="mediumblue") +
     ggplot2::theme_bw() +
     ggplot2::ylab(ylab)
 }
@@ -386,7 +386,7 @@ max_count_plot <- function(path = get_default_data_path(),
     ) %>%
 
     ggplot2::ggplot(ggplot2::aes(x=.data$year, y=.data$count_mean, group=.data$species, color=.data$species)) +
-    ggplot2::geom_point(ggplot2::aes(x=.data$year, y=.data$count, color=.data$species), size=2) +
+    ggplot2::geom_point(ggplot2::aes(x=.data$year, y=.data$count, color=.data$species)) +
     ggplot2::geom_line(linewidth=1.05) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position="bottom") +
