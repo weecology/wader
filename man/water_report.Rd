@@ -8,8 +8,7 @@ water_report(
   depths,
   minyear = as.integer(format(Sys.Date(), "\%Y")) - 3,
   maxyear = as.integer(format(Sys.Date(), "\%Y")),
-  wca = "1",
-  download_if_missing = TRUE
+  wca = "1"
 )
 }
 \arguments{
@@ -20,9 +19,6 @@ water_report(
 \item{maxyear}{Most recent year to include}
 
 \item{wca}{wca to plot}
-
-\item{download_if_missing}{if the specified file path doesn't have the
-EvergladesWadingBird folder, then download it}
 }
 \value{
 a data.frame
